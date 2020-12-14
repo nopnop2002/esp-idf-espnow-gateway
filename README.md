@@ -38,6 +38,10 @@ URL of MQTT broker.
 Enable long-range ESP-NOW.   
 When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.   
 
+![config-main](https://user-images.githubusercontent.com/6020549/102085230-aff4ce80-3e59-11eb-85f2-f53babe33f0d.jpg)
+
+![config-app](https://user-images.githubusercontent.com/6020549/102085238-b2572880-3e59-11eb-94b0-1d73f058f3bc.jpg)
+
 ---
 
 # ESP8266 Example Sketch
