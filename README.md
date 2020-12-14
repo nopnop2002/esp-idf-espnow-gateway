@@ -35,11 +35,12 @@ Maximum number of retries when connecting to wifi.
 - CONFIG_BROKER_URL   
 URL of MQTT broker.
 - CONFIG_ESPNOW_ENABLE_LONG_RANGE   
-Enable long-range ESP-NOW.
+Enable long-range ESP-NOW.   
+When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.   
 
 ---
 
-# ESP8266 Exampke Sketch
+# ESP8266 Example Sketch
 
 - esp-now-controller
 
