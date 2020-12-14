@@ -1,0 +1,33 @@
+menu "Application Configuration"
+
+	config STA_WIFI_SSID
+		string "WiFi SSID of STA mode"
+		default "sta-ssid"
+		help
+			SSID (network name) for the example to connect to.
+
+	config STA_WIFI_PASS
+		string "WiFi Password of STA mode"
+		default "sta-password"
+		help
+			WiFi password (WPA or WPA2) for the example to use.
+
+	config STA_MAXIMUM_RETRY
+		int "Maximum retry"
+		default 5
+		help
+			Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+
+	config BROKER_URL
+		string "Broker URL"
+		default "mqtt://iot.eclipse.org"
+		help
+			URL of the broker to connect to
+
+	config ESPNOW_ENABLE_LONG_RANGE
+		bool "Enable Long Range"
+		default "n"
+		help
+			When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps
+
+endmenu
