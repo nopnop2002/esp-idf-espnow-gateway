@@ -5,7 +5,7 @@ ADC_MODE(ADC_VCC);
 
 //#define SLEEP 60   // 1 minite sleep
 #define SLEEP 600   // 10 minute sleep
-#define MQTT_TOPIC "/mqtt/espnow"
+#define MQTT_TOPIC "/deepsleep/espnow"
 
 // REPLACE WITH RECEIVER MAC Address
 uint8_t broadcastAddress[] = {0x3c, 0x71, 0xbf, 0x4f, 0xc1, 0xa1};
@@ -23,7 +23,7 @@ struct_message myData;
 //unsigned long lastTime = 0;  
 //unsigned long timerDelay = 2000;  // send readings timer
 
-//RTC memory(128*4byte,512Byte)の定義
+// RTC memory (128*4byte,512Byte) structure
 struct {
   uint32_t interval;
   uint32_t counter;
