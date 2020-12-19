@@ -3,8 +3,8 @@
 
 ADC_MODE(ADC_VCC);
 
-//#define SLEEP 60   // 1 minite sleep
-#define SLEEP 600   // 10 minute sleep
+#define SLEEP 60   // 1 minite sleep
+//#define SLEEP 600   // 10 minute sleep
 #define MQTT_TOPIC "/deepsleep/espnow"
 
 // REPLACE WITH RECEIVER MAC Address
@@ -19,9 +19,6 @@ typedef struct struct_message {
 
 // Create a struct_message called myData
 struct_message myData;
-
-//unsigned long lastTime = 0;  
-//unsigned long timerDelay = 2000;  // send readings timer
 
 // RTC memory (128*4byte,512Byte) structure
 struct {
@@ -54,17 +51,18 @@ void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
   Serial.print("Last Packet Send Status: ");
   if (sendStatus == 0){
     Serial.println("Delivery success");
-    esp_now_sended = true;
   }
   else{
     Serial.println("Delivery fail");
   }
+  esp_now_sended = true;
 }
 
 
 void setup() {
   // Init Serial Monitor
   Serial.begin(115200);
+  long startMillis = millis();
   Serial.print("ESP.getResetReason()=");
   Serial.println(ESP.getResetReason());
   String resetReason = ESP.getResetReason();
@@ -100,14 +98,20 @@ void setup() {
   if (ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData))) {
     Serial.println("Read: ");
     printMemory(10);
-    if (prst->reason == 5) { // Deep-Sleep Wake
-      rtcData.counter++;
-    } else {
+    if (prst->reason == 0) { // Normal Start
       rtcData.interval = SLEEP;
       rtcData.counter = 0;
       for (int i = 0; i < sizeof(rtcData); i++) {
         rtcData.data[i] = 0;
       }
+    } else if (prst->reason == 6) { // External Reset
+      rtcData.interval = SLEEP;
+      rtcData.counter = 0;
+      for (int i = 0; i < sizeof(rtcData); i++) {
+        rtcData.data[i] = 0;
+      }
+    } else  {
+      rtcData.counter++;
     }
   }
 
@@ -137,8 +141,11 @@ void setup() {
   esp_now_add_peer(broadcastAddress, ESP_NOW_ROLE_SLAVE, 1, NULL, 0);
 
   // Set values to send
+  long endMillis = millis();
+  long diffMillis = endMillis - startMillis;
   strcpy(myData.topic, MQTT_TOPIC); // "/mqtt/espnow"
-  sprintf(myData.payload,"%08x %d %d %d",rtcData.counter,ESP.getVcc(),prst->reason,SLEEP);
+  //sprintf(myData.payload,"%d %d %d %d %d",rtcData.counter,ESP.getVcc(),prst->reason,SLEEP,diffMillis);
+  sprintf(myData.payload,"%d espnow %d %d %d",rtcData.counter,ESP.getVcc(),prst->reason,SLEEP);
 
   // Send message via ESP-NOW
   esp_now_sended = false;
