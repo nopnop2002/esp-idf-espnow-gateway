@@ -11,7 +11,7 @@ This project transfers the data received by ESP-NOW to MQTT.
 
 ESP8266/8285 + battery + ESP-NOW + DeelSpeep enables long-time operation.   
 This is a comparison of battery consumption between Wifi and ESP-NOW.   
-![スライド1](https://user-images.githubusercontent.com/6020549/102947939-e8ef0c00-4507-11eb-8ae8-f0638fcaef6e.JPG)
+![スライド1](https://user-images.githubusercontent.com/6020549/103885745-d38efa00-5123-11eb-8e4a-45c13d4c9543.JPG)
 
 ---
 
