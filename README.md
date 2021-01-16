@@ -17,6 +17,7 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 
 ![スライド2](https://user-images.githubusercontent.com/6020549/104799142-01ed9300-5810-11eb-8f7c-51234e385483.JPG)
 
+![スライド3](https://user-images.githubusercontent.com/6020549/104805790-df5e7880-5815-11eb-8fa1-408ed5dc4bdb.JPG)
 ---
 
 # Install
