@@ -9,9 +9,13 @@ I was inspired by [this](https://github.com/m1cr0lab-esp32/esp-now-network-and-w
 ESP-NOW can be used with ESP8266/8285, but we cannot use WiFi at the same time.   
 This project transfers the data received by ESP-NOW to MQTT.   
 
+# Battery life
 ESP8266/8285 + battery + ESP-NOW + DeelSpeep enables long-time operation.   
 This is a comparison of battery consumption between Wifi and ESP-NOW.   
-![スライド1](https://user-images.githubusercontent.com/6020549/103885745-d38efa00-5123-11eb-8e4a-45c13d4c9543.JPG)
+
+![スライド1](https://user-images.githubusercontent.com/6020549/104799141-0023cf80-5810-11eb-8594-49f0efd01dad.JPG)
+
+![スライド2](https://user-images.githubusercontent.com/6020549/104799142-01ed9300-5810-11eb-8f7c-51234e385483.JPG)
 
 ---
 
