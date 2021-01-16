@@ -17,6 +17,7 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 
 ![スライド2](https://user-images.githubusercontent.com/6020549/104807010-d9b96080-581e-11eb-8265-82b2fa0450f3.JPG)
 
+# Forecast of Battery life
 ESP12E can wake-up from Deep Sleep at 2.5V.
 ![スライド3](https://user-images.githubusercontent.com/6020549/104806923-539d1a00-581e-11eb-95ef-0beab6de8311.JPG)
 
