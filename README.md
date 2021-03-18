@@ -69,6 +69,6 @@ Replace with receiver(ESP32) MAC address.
 uint8_t broadcastAddress[] = {0x3c, 0x71, 0xbf, 0x4f, 0xc1, 0xa1};
 ```
 
-When you run this project on the ESP32, you will see the following:   
+When you run this project on the ESP32, you will see receiver(ESP32) MAC address:   
 ![mac](https://user-images.githubusercontent.com/6020549/102291484-8dac9f00-3f86-11eb-804a-d06e7e813e02.jpg)
 
