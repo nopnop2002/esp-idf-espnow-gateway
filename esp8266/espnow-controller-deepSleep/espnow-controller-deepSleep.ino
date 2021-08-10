@@ -8,7 +8,8 @@ ADC_MODE(ADC_VCC);
 #define MQTT_TOPIC "/deepsleep/espnow"
 
 // REPLACE WITH RECEIVER MAC Address
-uint8_t broadcastAddress[] = {0x3c, 0x71, 0xbf, 0x4f, 0xc1, 0xa1};
+uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
+//uint8_t remoteDevice[] = {0x30, 0xae, 0xa4, 0xca, 0xe1, 0x42};
 
 // Structure example to send data
 // Must match the receiver structure
@@ -24,25 +25,9 @@ struct_message myData;
 struct {
   uint32_t interval;
   uint32_t counter;
-  byte data[504]; // User Data
+  uint32_t elaspeed;
+  byte data[500]; // User Data (unused)
 } rtcData;
-
-// Print RTC memory
-void printMemory(int sz) {
-  char buf[3];
-//  for (int i = 0; i < sizeof(rtcData); i++) {
-  for (int i = 0; i < sz; i++) {
-    sprintf(buf, "%02X", rtcData.data[i]);
-    Serial.print(buf);
-    if ((i + 1) % 32 == 0) {
-      Serial.println();
-    }
-    else {
-      Serial.print(" ");
-    }
-  }
-  Serial.println();
-}
 
 bool esp_now_sended;
 
@@ -58,11 +43,16 @@ void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
   esp_now_sended = true;
 }
 
+// Callback when data is received
+void ICACHE_FLASH_ATTR simple_cb(u8 *macaddr, u8 *data, u8 len) {
+
+}
 
 void setup() {
-  // Init Serial Monitor
-  Serial.begin(115200);
+  delay(100);
   long startMillis = millis();
+  Serial.begin(115200);
+  Serial.println();
   Serial.print("ESP.getResetReason()=");
   Serial.println(ESP.getResetReason());
   String resetReason = ESP.getResetReason();
@@ -94,34 +84,6 @@ void setup() {
   Serial.print("reset reason=");
   Serial.println(prst->reason);
 
-  // Read data from RTC memory
-  if (ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData))) {
-    Serial.println("Read: ");
-    printMemory(10);
-    if (prst->reason == 0) { // Normal Start
-      rtcData.interval = SLEEP;
-      rtcData.counter = 0;
-      for (int i = 0; i < sizeof(rtcData); i++) {
-        rtcData.data[i] = 0;
-      }
-    } else if (prst->reason == 6) { // External Reset
-      rtcData.interval = SLEEP;
-      rtcData.counter = 0;
-      for (int i = 0; i < sizeof(rtcData); i++) {
-        rtcData.data[i] = 0;
-      }
-    } else  {
-      rtcData.counter++;
-    }
-  }
-
-  // Write data to RTC memory
-  if (ESP.rtcUserMemoryWrite(0, (uint32_t*) &rtcData, sizeof(rtcData))) {
-    Serial.println("Write: ");
-    printMemory(10);
-  }
-
-  
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
 
@@ -135,21 +97,57 @@ void setup() {
   // get the status of Trasnmitted packet
   esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
   esp_now_register_send_cb(OnDataSent);
+  esp_now_register_recv_cb(simple_cb);
   
   // Register peer
-  // esp_now_add_peer(uint8 mac_addr, uint8 role, uint8 channel, uint8 key, uint8 key_len)
-  esp_now_add_peer(broadcastAddress, ESP_NOW_ROLE_SLAVE, 1, NULL, 0);
+  // If the channel is set to 0, data will be sent on the current channel. 
+  esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
+  //esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 1, NULL, 0);
+
+  long elapsedMillis = millis() - startMillis;
+  Serial.print("elapsedMillis: ");
+  Serial.println(elapsedMillis);
+
+  // Read data from RTC memory
+  if (ESP.rtcUserMemoryRead(0, (uint32_t*) &rtcData, sizeof(rtcData))) {
+    Serial.println("rtcUserMemoryRead Success");
+    if (prst->reason != 5) { // Not REANSON_DEEP_SLEEP_AWAKE
+      rtcData.interval = SLEEP;
+      rtcData.counter = 0;
+      rtcData.elaspeed = 0;
+    } else  {
+      rtcData.counter++;
+      rtcData.elaspeed = rtcData.elaspeed + elapsedMillis;
+    }
+  } else {
+    Serial.println("rtcUserMemoryRead Fail");
+  }
+
+  // Write data to RTC memory
+  if (ESP.rtcUserMemoryWrite(0, (uint32_t*) &rtcData, sizeof(rtcData))) {
+    Serial.println("rtcUserMemoryWrite Success");
+  } else {
+    Serial.println("rtcUserMemoryWrite Fail");
+  }
+
+  long average = 0;
+  if (rtcData.counter > 0) {
+    average = rtcData.elaspeed / rtcData.counter;
+    Serial.print("counter=");
+    Serial.print(rtcData.counter);
+    Serial.print(" elaspeed=");
+    Serial.print(rtcData.elaspeed);
+    Serial.print(" average=");
+    Serial.println(average);
+  }
 
   // Set values to send
-  long endMillis = millis();
-  long diffMillis = endMillis - startMillis;
   strcpy(myData.topic, MQTT_TOPIC); // "/mqtt/espnow"
-  //sprintf(myData.payload,"%d %d %d %d %d",rtcData.counter,ESP.getVcc(),prst->reason,SLEEP,diffMillis);
-  sprintf(myData.payload,"%d espnow %d %d %d",rtcData.counter,ESP.getVcc(),prst->reason,SLEEP);
+  sprintf(myData.payload,"%d %d[Msec] %d[V] %d[Sec]",rtcData.counter,average,ESP.getVcc(),SLEEP);
 
   // Send message via ESP-NOW
   esp_now_sended = false;
-  esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+  esp_now_send(remoteDevice, (uint8_t *) &myData, sizeof(myData));
 
   // Wait until send complete
   while(1) {

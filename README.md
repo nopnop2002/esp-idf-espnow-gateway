@@ -27,18 +27,19 @@ ESP12S/07S can wake-up from Deep Sleep at 2.2V.
 
 ---
 
-# Install
+# Installation   
 
 ```
 git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
 cd esp-idf-espnow-gateway
-make menuconfig
-make flash monitor
+idf.py set-target esp32
+idf.py menuconfig
+idf.py flash monitor
 ```
 
 ---
 
-# Firmware configuration
+# Configuration   
 You have to set this config value using menuconfig.   
 
 - CONFIG_STA_WIFI_SSID   
@@ -61,8 +62,30 @@ When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.
 
 # ESP8266 Example Sketch
 There is two example.   
-- esp-now-controller   
-- esp-now-controller-deepSleep   
+- espnow-controller   
+Publish every 2 seconds.   
+```
+$ mosquitto_sub -v -h 192.168.10.40 -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
+21/08/11 07:36:41 /mqtt/espnow Hello 2001 3093
+21/08/11 07:36:43 /mqtt/espnow Hello 4002 3093
+21/08/11 07:36:45 /mqtt/espnow Hello 6003 3093
+21/08/11 07:36:47 /mqtt/espnow Hello 8004 3093
+21/08/11 07:36:49 /mqtt/espnow Hello 10005 3093
+21/08/11 07:36:51 /mqtt/espnow Hello 12006 3093
+21/08/11 07:36:53 /mqtt/espnow Hello 14007 3093
+```
+
+- espnow-controller-deepSleep   
+Wake up from Deep Sleep every 60 seconds and publish.   
+You need to connect Resets and GPIO16.   
+```
+$ mosquitto_sub -v -h 192.168.10.40 -p 1883  -t "/deepsleep/espnow" | ts "%y/%m/%d %H:%M:%S"
+21/08/11 07:28:01 /deepsleep/espnow 0 0[Msec] 3098[V] 60[Sec]
+21/08/11 07:29:01 /deepsleep/espnow 1 5[Msec] 3098[V] 60[Sec]
+21/08/11 07:30:01 /deepsleep/espnow 2 5[Msec] 3098[V] 60[Sec]
+21/08/11 07:31:01 /deepsleep/espnow 3 4[Msec] 3098[V] 60[Sec]
+21/08/11 07:32:01 /deepsleep/espnow 4 4[Msec] 3098[V] 60[Sec]
+```
 
 Replace with receiver(ESP32) MAC address.   
 ```

@@ -65,7 +65,7 @@ void mqtt_pub(void *pvParameters)
 {
 	ESP_LOGI(TAG, "Start Publish Broker:%s", CONFIG_BROKER_URL);
 	mqtt_status_event_group = xEventGroupCreate();
-	configASSERT( mqtt_status_event_group )
+	configASSERT( mqtt_status_event_group );
 
 	esp_mqtt_client_config_t mqtt_cfg = {
 		.uri = CONFIG_BROKER_URL,

@@ -3,8 +3,11 @@
 
 ADC_MODE(ADC_VCC);
 
+#define MQTT_TOPIC "/mqtt/espnow"
+
 // REPLACE WITH RECEIVER MAC Address
-uint8_t broadcastAddress[] = {0x3c, 0x71, 0xbf, 0x4f, 0xc1, 0xa1};
+uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
+//uint8_t remoteDevice[] = {0x3c, 0x71, 0xbf, 0x4f, 0xc1, 0xa1};
 
 // Structure example to send data
 // Must match the receiver structure
@@ -19,6 +22,8 @@ struct_message myData;
 unsigned long lastTime = 0;  
 unsigned long timerDelay = 2000;  // send readings timer
 
+bool esp_now_send_status;
+
 // Callback when data is sent
 void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
   Serial.print("Last Packet Send Status: ");
@@ -28,8 +33,13 @@ void OnDataSent(uint8_t *mac_addr, uint8_t sendStatus) {
   else{
     Serial.println("Delivery fail");
   }
+  esp_now_send_status = true;
 }
 
+// Callback when data is received
+void ICACHE_FLASH_ATTR simple_cb(u8 *macaddr, u8 *data, u8 len) {
+
+}
 
 void setup() {
   // Init Serial Monitor
@@ -49,22 +59,29 @@ void setup() {
   // get the status of Trasnmitted packet
   esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
   esp_now_register_send_cb(OnDataSent);
+  esp_now_register_recv_cb(simple_cb);
   
   // Register peer
   // If the channel is set to 0, data will be sent on the current channel. 
-  esp_now_add_peer(broadcastAddress, ESP_NOW_ROLE_SLAVE, 0, NULL, 0);
-  //esp_now_add_peer(broadcastAddress, ESP_NOW_ROLE_SLAVE, 1, NULL, 0);
+  esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
+  //esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 1, NULL, 0);
 }
 
 void loop() {
   if ((millis() - lastTime) > timerDelay) {
     lastTime = millis();
     // Set values to send
-    strcpy(myData.topic, "/mqtt/espnow");
-    //strcpy(myData.payload, "Hello World!");
+    strcpy(myData.topic, MQTT_TOPIC); // "/mqtt/espnow";
     sprintf(myData.payload, "Hello %d %d", lastTime, ESP.getVcc());
 
     // Send message via ESP-NOW
-    esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+    esp_now_send_status = false;
+    esp_now_send(remoteDevice, (uint8_t *) &myData, sizeof(myData));
+
+    // Wait until send complete
+    while(1) {
+      if (esp_now_send_status) break;
+      delay(1);
+    }
   }
 }
