@@ -62,6 +62,14 @@ When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.
 
 # ESP8266 Example Sketch
 There is two example.   
+Replace with receiver(ESP32) MAC address.   
+```
+uint8_t broadcastAddress[] = {0x3c, 0x71, 0xbf, 0x4f, 0xc1, 0xa1};
+```
+
+When you run this project on the ESP32, you will see receiver(ESP32) MAC address:   
+![mac](https://user-images.githubusercontent.com/6020549/102291484-8dac9f00-3f86-11eb-804a-d06e7e813e02.jpg)
+
 - espnow-controller   
 Publish every 2 seconds.   
 ```
@@ -86,12 +94,3 @@ $ mosquitto_sub -v -h 192.168.10.40 -p 1883  -t "/deepsleep/espnow" | ts "%y/%m/
 21/08/11 07:31:01 /deepsleep/espnow 3 4[Msec] 3098[V] 60[Sec]
 21/08/11 07:32:01 /deepsleep/espnow 4 4[Msec] 3098[V] 60[Sec]
 ```
-
-Replace with receiver(ESP32) MAC address.   
-```
-uint8_t broadcastAddress[] = {0x3c, 0x71, 0xbf, 0x4f, 0xc1, 0xa1};
-```
-
-When you run this project on the ESP32, you will see receiver(ESP32) MAC address:   
-![mac](https://user-images.githubusercontent.com/6020549/102291484-8dac9f00-3f86-11eb-804a-d06e7e813e02.jpg)
-
