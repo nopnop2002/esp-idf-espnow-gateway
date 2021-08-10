@@ -62,7 +62,8 @@ When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.
 
 # ESP8266 Example Sketch
 There is two example.   
-Replace with remote(ESP32's) MAC address.   
+Replace the remote MAC address with your ESP32 MAC address.
+
 ```
 uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
 ```
