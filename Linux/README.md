@@ -59,7 +59,7 @@ wlx1cbfceaae44d: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
-You can now use the ESP-NOW protocol.
+You can now use the ESP-NOW protocol.   
 Clone the repository from github and compile it.   
 Specify the name of the WiFi device in the run-time argument.
 
