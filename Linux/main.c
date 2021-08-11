@@ -37,13 +37,14 @@ $ sudo ifconfig wlp5s0 up
 //#define ADDRESS     "tcp://broker.hivemq.com:1883"
 #define ADDRESS     "tcp://192.168.10.40:1883"
 #define QOS         1
+#define RETAINED    0
 #define TIMEOUT     10000L
 
 #define PACKET_LENGTH 400 //Approximate
 #define MYDATA 18         //0x12
 #define MAX_PACKET_LEN 1000
 
-//#define LOGGING
+#define LOGGING
 
 /*our MAC address*/
 //{0xF8, 0x1A, 0x67, 0xB7, 0xeB, 0x0B};
@@ -143,7 +144,6 @@ int main(int argc, char **argv)
 
     sock_fd = create_raw_socket(dev, &bpf); /* Creating the raw socket */
 
-
 #ifdef LOGGING
     // log file name
     char szTmp[32];
@@ -184,6 +184,19 @@ int main(int argc, char **argv)
 
     while (1)
     {
+        fd_set fds;
+        FD_ZERO(&fds);
+        FD_SET(sock_fd, &fds);
+        struct timeval tv;
+        tv.tv_sec = 10;
+        tv.tv_usec = 0;
+        int received = select(sock_fd+1, &fds, NULL, NULL, &tv);
+        printf("received=%d\n",received);
+        if (received == 0) {
+            MQTTClient_yield();
+            continue;
+        }
+
         int len = recvfrom(sock_fd, buff, MAX_PACKET_LEN, MSG_TRUNC, NULL, 0);
 
         if (len < 0)
@@ -191,35 +204,35 @@ int main(int argc, char **argv)
             perror("Socket receive failed or error");
             break;
         }
-        else
-        {
-            //printf("len:%d\n", len);
-            //print_packet(buff, len);
-            //print_packet(&buff[63], len-63);
-            memcpy(myData.topic, &buff[63], sizeof(myData.topic));
-            memcpy(myData.payload, &buff[127], sizeof(myData.payload));
-            printf("myData.topic=[%s]\n",myData.topic);
-            printf("myData.payload=[%s]\n",myData.payload);
+
+        //printf("len:%d\n", len);
+        //print_packet(buff, len);
+        //print_packet(&buff[63], len-63);
+        memcpy(myData.topic, &buff[63], sizeof(myData.topic));
+        memcpy(myData.payload, &buff[127], sizeof(myData.payload));
+        printf("myData.topic=[%s]\n",myData.topic);
+        printf("myData.payload=[%s]\n",myData.payload);
 
 #ifdef LOGGING
-            FILE *fp = fopen(logPath, "a+");
-            if (fp) {
-                fprintf(fp, "%s %s\n", myData.topic, myData.payload);
-                fclose(fp);
-            }
+        FILE *fp = fopen(logPath, "a+");
+        if (fp) {
+            fprintf(fp, "%s %s\n", myData.topic, myData.payload);
+            fclose(fp);
+        }
 #endif
 
-            pubmsg.payload = &myData.payload;
-            pubmsg.payloadlen = strlen(myData.payload);
-            pubmsg.qos = QOS;
-            pubmsg.retained = 0;
-            MQTTClient_publishMessage(client, myData.topic, &pubmsg, &token);
-            printf("Waiting for up to %d seconds for publication\n"
-            "on topic %s for client with ClientID: %s\n", (int)(TIMEOUT/1000), myData.topic, clientId);
-            rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
-            printf("Message with delivery token %d delivered\n", token);
-        }
-    }
+        pubmsg.payload = &myData.payload;
+        pubmsg.payloadlen = strlen(myData.payload);
+        pubmsg.qos = QOS;
+        pubmsg.retained = RETAINED;
+        MQTTClient_publishMessage(client, myData.topic, &pubmsg, &token);
+        printf("Waiting for up to %d seconds for publication\n"
+        "on topic %s for client with ClientID: %s\n", (int)(TIMEOUT/1000), myData.topic, clientId);
+        rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
+        printf("Message with delivery token %d delivered\n", token);
+        //sleep(1);
+    } // end while
+
     // never reach here
     MQTTClient_disconnect(client, 10000);
     MQTTClient_destroy(&client);
