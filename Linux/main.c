@@ -36,7 +36,6 @@ $ sudo ifconfig wlp5s0 up
 
 //#define ADDRESS     "tcp://broker.hivemq.com:1883"
 #define ADDRESS     "tcp://192.168.10.40:1883"
-#define CLIENTID    "ExampleClientPub"
 #define QOS         1
 #define TIMEOUT     10000L
 
@@ -167,7 +166,11 @@ int main(int argc, char **argv)
     MQTTClient_deliveryToken token;
     int rc;
 
-    MQTTClient_create(&client, ADDRESS, CLIENTID, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+    char clientId[40];
+    pid_t c_pid = getpid();
+    sprintf(clientId, "CLIENT-%d", c_pid);
+    printf("clientId=%s\n", clientId);
+    MQTTClient_create(&client, ADDRESS, clientId, MQTTCLIENT_PERSISTENCE_NONE, NULL);
     conn_opts.keepAliveInterval = 20;
     conn_opts.cleansession = 1;
 
@@ -212,7 +215,7 @@ int main(int argc, char **argv)
             pubmsg.retained = 0;
             MQTTClient_publishMessage(client, myData.topic, &pubmsg, &token);
             printf("Waiting for up to %d seconds for publication\n"
-            "on topic %s for client with ClientID: %s\n", (int)(TIMEOUT/1000), myData.topic, CLIENTID);
+            "on topic %s for client with ClientID: %s\n", (int)(TIMEOUT/1000), myData.topic, clientId);
             rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
             printf("Message with delivery token %d delivered\n", token);
         }
