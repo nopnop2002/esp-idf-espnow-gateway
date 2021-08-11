@@ -32,6 +32,7 @@ $ sudo ifconfig wlp5s0 up
 #include <assert.h>
 #include <linux/filter.h>
 #include <libgen.h>
+#include <time.h>
 #include "MQTTClient.h"
 
 //#define ADDRESS     "tcp://broker.hivemq.com:1883"
@@ -44,7 +45,7 @@ $ sudo ifconfig wlp5s0 up
 #define MYDATA 18         //0x12
 #define MAX_PACKET_LEN 1000
 
-#define LOGGING
+//#define LOGGING
 
 /*our MAC address*/
 //{0xF8, 0x1A, 0x67, 0xB7, 0xeB, 0x0B};
@@ -216,7 +217,18 @@ int main(int argc, char **argv)
 #ifdef LOGGING
         FILE *fp = fopen(logPath, "a+");
         if (fp) {
-            fprintf(fp, "%s %s\n", myData.topic, myData.payload);
+            time_t timer = time(NULL); 
+            struct tm *local; 
+            local = localtime(&timer);
+            int year = local->tm_year + 1900;
+            int month = local->tm_mon + 1;
+            int day = local->tm_mday;
+            int hour = local->tm_hour;
+            int minute = local->tm_min;
+            int second = local->tm_sec;
+            
+            fprintf(fp, "%d/%02d/%02d %02d:%02d:%02d %s %s\n", 
+            year,month,day,hour,minute,second,myData.topic, myData.payload);
             fclose(fp);
         }
 #endif
