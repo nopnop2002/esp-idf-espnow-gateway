@@ -7,7 +7,6 @@ ADC_MODE(ADC_VCC);
 
 // REPLACE WITH RECEIVER MAC Address
 uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
-//uint8_t remoteDevice[] = {0x3c, 0x71, 0xbf, 0x4f, 0xc1, 0xa1};
 
 // Structure example to send data
 // Must match the receiver structure
@@ -20,7 +19,7 @@ typedef struct struct_message {
 struct_message myData;
 
 unsigned long lastTime = 0;  
-unsigned long timerDelay = 2000;  // send readings timer
+unsigned long timerDelay = 10000;  // send readings timer
 
 bool esp_now_send_status;
 
@@ -63,7 +62,8 @@ void setup() {
   
   // Register peer
   // If the channel is set to 0, data will be sent on the current channel. 
-  esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
+  esp_now_add_peer(remoteDevice, ESP_NOW_ROLE_SLAVE, 0, NULL, 0);
+  //esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
   //esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 1, NULL, 0);
 }
 

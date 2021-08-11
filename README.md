@@ -74,26 +74,29 @@ When you run this project on the ESP32, you will see ESP32 MAC address:
 ![mac](https://user-images.githubusercontent.com/6020549/102291484-8dac9f00-3f86-11eb-804a-d06e7e813e02.jpg)
 
 - espnow-controller   
-Publish every 2 seconds.   
+Publish every 10 seconds.   
+I used local broker.   
 ```
 $ mosquitto_sub -v -h 192.168.10.40 -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
-21/08/11 07:36:41 /mqtt/espnow Hello 2001 3093
-21/08/11 07:36:43 /mqtt/espnow Hello 4002 3093
-21/08/11 07:36:45 /mqtt/espnow Hello 6003 3093
-21/08/11 07:36:47 /mqtt/espnow Hello 8004 3093
-21/08/11 07:36:49 /mqtt/espnow Hello 10005 3093
-21/08/11 07:36:51 /mqtt/espnow Hello 12006 3093
-21/08/11 07:36:53 /mqtt/espnow Hello 14007 3093
+21/08/11 16:52:25 /mqtt/espnow Hello 10001 2968
+21/08/11 16:52:35 /mqtt/espnow Hello 20002 2966
+21/08/11 16:52:45 /mqtt/espnow Hello 30003 2966
+21/08/11 16:52:55 /mqtt/espnow Hello 40004 2965
+21/08/11 16:53:05 /mqtt/espnow Hello 50005 2966
+21/08/11 16:53:15 /mqtt/espnow Hello 60006 2965
 ```
 
 - espnow-controller-deepSleep   
 Wake up from Deep Sleep every 60 seconds and publish.   
 You need to connect Resets and GPIO16.   
+I used local broker.   
+
 ```
-$ mosquitto_sub -v -h 192.168.10.40 -p 1883  -t "/deepsleep/espnow" | ts "%y/%m/%d %H:%M:%S"
-21/08/11 07:28:01 /deepsleep/espnow 0 0[Msec] 3098[V] 60[Sec]
-21/08/11 07:29:01 /deepsleep/espnow 1 5[Msec] 3098[V] 60[Sec]
-21/08/11 07:30:01 /deepsleep/espnow 2 5[Msec] 3098[V] 60[Sec]
-21/08/11 07:31:01 /deepsleep/espnow 3 4[Msec] 3098[V] 60[Sec]
-21/08/11 07:32:01 /deepsleep/espnow 4 4[Msec] 3098[V] 60[Sec]
+$ mosquitto_sub -v -h 192.168.10.40 -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
+21/08/11 16:40:32 /mqtt/espnow Hello 66 2904
+21/08/11 16:41:30 /mqtt/espnow Hello 68 2908
+21/08/11 16:42:29 /mqtt/espnow Hello 67 2908
+21/08/11 16:43:29 /mqtt/espnow Hello 67 2907
+21/08/11 16:44:28 /mqtt/espnow Hello 68 2911
+21/08/11 16:45:27 /mqtt/espnow Hello 67 2906
 ```
