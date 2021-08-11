@@ -18,11 +18,11 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 ![スライド2](https://user-images.githubusercontent.com/6020549/104807010-d9b96080-581e-11eb-8265-82b2fa0450f3.JPG)
 
 # Forecast of Battery life
-The ESP12E can wake up from deep sleep with a voltage of 2.5V.   
+ESP12E can wake up from deep sleep with a voltage of 2.5V.   
 It can run for 3 months with 2 AA batteries.   
 ![スライド3](https://user-images.githubusercontent.com/6020549/104807345-ae844080-5821-11eb-97f0-07a1cac5a000.JPG)
 
-The ESP12S/07S can wake up from deep sleep with a voltage of 2.2V.   
+ESP12S/07S can wake up from deep sleep with a voltage of 2.2V.   
 It can run for 4 months with 2 AA batteries.   
 ![スライド4](https://user-images.githubusercontent.com/6020549/104807347-b7751200-5821-11eb-94fa-5878262d4f1e.JPG)
 
