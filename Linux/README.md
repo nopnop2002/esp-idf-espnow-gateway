@@ -96,5 +96,5 @@ Message with delivery token 3 delivered
 # ESP8266 Example Sketch
 Replace the remote MAC address with your Linux MAC address.
 ```
-uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
+uint8_t remoteDevice[] = {0x1c, 0xbf, 0xce, 0xaa, 0xe4, 0x4d};
 ```
