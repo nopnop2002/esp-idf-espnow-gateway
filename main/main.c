@@ -28,6 +28,7 @@
 #include "esp_system.h"
 #include "esp_now.h"
 
+
 #include "espnow.h"
 #include "mqtt.h"
 
@@ -69,6 +70,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 	}
 }
 
+#define ESPNOW_WIFI_IF   ESP_IF_WIFI_STA
 
 /* WiFi should start before using ESPNOW */
 static void initialise_wifi(void)
@@ -96,6 +98,10 @@ static void initialise_wifi(void)
 	ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_APSTA) );
 	ESP_ERROR_CHECK( esp_wifi_set_ps(WIFI_PS_NONE) );
 	ESP_ERROR_CHECK( esp_wifi_start() );
+
+#if CONFIG_ESPNOW_ENABLE_LONG_RANGE
+	ESP_ERROR_CHECK( esp_wifi_set_protocol(ESPNOW_WIFI_IF, WIFI_PROTOCOL_11B|WIFI_PROTOCOL_11G|WIFI_PROTOCOL_11N|WIFI_PROTOCOL_LR) );
+#endif
 
 	initialized = true;
 }

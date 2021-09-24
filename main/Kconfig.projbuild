@@ -4,13 +4,13 @@ menu "Application Configuration"
 		string "WiFi SSID of STA mode"
 		default "sta-ssid"
 		help
-			SSID (network name) for the example to connect to.
+			SSID (network name) for to connect to.
 
 	config STA_WIFI_PASS
 		string "WiFi Password of STA mode"
 		default "sta-password"
 		help
-			WiFi password (WPA or WPA2) for the example to use.
+			WiFi password (WPA or WPA2) to use.
 
 	config STA_MAXIMUM_RETRY
 		int "Maximum retry"
