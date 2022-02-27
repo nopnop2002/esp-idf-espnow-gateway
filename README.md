@@ -26,6 +26,8 @@ ESP12S/07S can wake up from deep sleep with a voltage of 2.2V.
 With a 60-second Deep Sleep, it can run on two AA batteries for four months.   
 ![スライド4](https://user-images.githubusercontent.com/6020549/104807347-b7751200-5821-11eb-94fa-5878262d4f1e.JPG)
 
+# Results after 112 days
+![スライド1](https://user-images.githubusercontent.com/6020549/155865309-e554042d-b605-4b3c-9a5b-6d6a881666a8.JPG)
 
 ---
 
