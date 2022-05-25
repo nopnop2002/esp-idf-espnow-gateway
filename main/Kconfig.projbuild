@@ -20,7 +20,7 @@ menu "Application Configuration"
 
 	config BROKER_URL
 		string "Broker URL"
-		default "mqtt://iot.eclipse.org"
+		default "mqtt://broker.emqx.io"
 		help
 			URL of the broker to connect to
 

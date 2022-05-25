@@ -25,6 +25,7 @@
 #include "esp_netif.h"
 #include "esp_wifi.h"
 #include "esp_log.h"
+#include "esp_mac.h"
 #include "esp_system.h"
 #include "esp_now.h"
 
@@ -139,8 +140,8 @@ static bool wifi_apsta(void)
 		uint8_t ap_mac[6] = {0};
 		esp_wifi_get_mac(ESP_IF_WIFI_STA, sta_mac);
 		esp_wifi_get_mac(ESP_IF_WIFI_AP, ap_mac);
-		//ESP_LOGI(pcTaskGetTaskName(0), "sta_mac:" MACSTR ,MAC2STR(sta_mac));
-		ESP_LOGI(pcTaskGetTaskName(0), "ap_mac:" MACSTR ,MAC2STR(ap_mac));
+		//ESP_LOGI(pcTaskGetName(0), "sta_mac:" MACSTR ,MAC2STR(sta_mac));
+		ESP_LOGI(pcTaskGetName(0), "ap_mac:" MACSTR ,MAC2STR(ap_mac));
 
 	} else if (bits & WIFI_FAIL_BIT) {
 		ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s", CONFIG_STA_WIFI_SSID, CONFIG_STA_WIFI_PASS);
@@ -154,6 +155,7 @@ static bool wifi_apsta(void)
 
 }
 
+#if 0
 /* ESPNOW sending or receiving callback function is called in WiFi task.
  * Users should not do lengthy operations from this task. Instead, post
  * necessary data to a queue and handle it from a lower priority task. */
@@ -174,6 +176,7 @@ static void example_espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_
 		ESP_LOGW(TAG, "Send send queue fail");
 	}
 }
+#endif
 
 static void example_espnow_recv_cb(const uint8_t *mac_addr, const uint8_t *data, int len)
 {
@@ -206,7 +209,7 @@ static void example_espnow_recv_cb(const uint8_t *mac_addr, const uint8_t *data,
 
 static void espnow_task(void *pvParameter)
 {
-	ESP_LOGI(pcTaskGetTaskName(0), "Start");
+	ESP_LOGI(pcTaskGetName(0), "Start");
 	example_espnow_event_t evt;
 	example_espnow_data_t recv_data;
 
@@ -222,8 +225,8 @@ static void espnow_task(void *pvParameter)
 			xSemaphoreGive(xSemaphoreData);
 
 			// Send MQTT
-			ESP_LOGI(pcTaskGetTaskName(0), "recv_data.topic=[%s]", recv_data.topic);
-			ESP_LOGI(pcTaskGetTaskName(0), "recv_data.payload=[%s]", recv_data.payload);
+			ESP_LOGI(pcTaskGetName(0), "recv_data.topic=[%s]", recv_data.topic);
+			ESP_LOGI(pcTaskGetName(0), "recv_data.payload=[%s]", recv_data.payload);
 			mqttBuf.topic_type = PUBLISH;
 			strcpy(mqttBuf.topic, recv_data.topic);
 			mqttBuf.topic_len = strlen(mqttBuf.topic);
@@ -232,7 +235,7 @@ static void espnow_task(void *pvParameter)
 			xQueueSend(xQueuePublish, &mqttBuf, 0);
 
 		} else {
-			ESP_LOGE(pcTaskGetTaskName(0), "Callback type error: %d", evt.id);
+			ESP_LOGE(pcTaskGetName(0), "Callback type error: %d", evt.id);
 			break;
 		}
 	} // end while

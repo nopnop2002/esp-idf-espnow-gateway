@@ -70,7 +70,7 @@ When you run this project on the ESP32, you will see ESP32 MAC address:
 Publish every 10 seconds.   
 I used local broker.   
 ```
-$ mosquitto_sub -v -h 192.168.10.40 -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
+$ mosquitto_sub -v -h broker.emqx.io -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
 21/08/11 16:52:25 /mqtt/espnow Hello 10001 2968
 21/08/11 16:52:35 /mqtt/espnow Hello 20002 2966
 21/08/11 16:52:45 /mqtt/espnow Hello 30003 2966
@@ -85,7 +85,7 @@ You need to connect Resets and GPIO16.
 I used local broker.   
 
 ```
-$ mosquitto_sub -v -h 192.168.10.40 -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
+$ mosquitto_sub -v -h broker.emqx.io -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
 21/08/11 16:40:32 /mqtt/espnow Hello 66 2904
 21/08/11 16:41:30 /mqtt/espnow Hello 68 2908
 21/08/11 16:42:29 /mqtt/espnow Hello 67 2908
