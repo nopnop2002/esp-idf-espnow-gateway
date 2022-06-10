@@ -51,7 +51,7 @@ When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.
 
 ![config-main](https://user-images.githubusercontent.com/6020549/102085230-aff4ce80-3e59-11eb-85f2-f53babe33f0d.jpg)
 
-![config-app](https://user-images.githubusercontent.com/6020549/102085238-b2572880-3e59-11eb-94b0-1d73f058f3bc.jpg)
+![config-app](https://user-images.githubusercontent.com/6020549/173013050-fabf4eeb-bf69-4cab-96e7-8acc2e32b2a6.jpg)
 
 ---
 
@@ -68,7 +68,7 @@ When you run this project on the ESP32, you will see ESP32 MAC address:
 
 - espnow-controller   
 Publish every 10 seconds.   
-I used local broker.   
+I used broker.emqx.io as MQTT broker.   
 ```
 $ mosquitto_sub -v -h broker.emqx.io -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
 21/08/11 16:52:25 /mqtt/espnow Hello 10001 2968
@@ -82,7 +82,7 @@ $ mosquitto_sub -v -h broker.emqx.io -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %
 - espnow-controller-deepSleep   
 Wake up from Deep Sleep every 60 seconds and publish.   
 You need to connect Resets and GPIO16.   
-I used local broker.   
+I used broker.emqx.io as MQTT broker.   
 
 ```
 $ mosquitto_sub -v -h broker.emqx.io -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %H:%M:%S"
