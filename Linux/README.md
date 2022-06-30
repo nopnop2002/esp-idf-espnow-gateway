@@ -19,7 +19,7 @@ $ nmcli device wifi
 
 2.Use the following command to find the device name and MAC address of your WiFi device.   
 wlx1cbfceaae44d is the device name.   
-1c:bf:ce:aa:e4:4d is the MAC address.   
+__1c:bf:ce:aa:e4:4d__ is the MAC address.   
 ```
 
 $ iwconfig
