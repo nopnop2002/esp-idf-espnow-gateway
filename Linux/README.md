@@ -3,7 +3,7 @@
 I ported from [here](https://github.com/thomasfla/Linux-ESPNOW).   
 I tried it on Ubuntu 20.04.   
 
-1.Insert a USB-WiFi dongle into your Linux machine and use the following command to see if the driver supports it.
+## Insert a USB-WiFi dongle into your Linux machine and use the following command to see if the driver supports it.
 ```
 $ nmcli device wifi
 *  SSID                MODE   CHAN  RATE       SIGNAL  BARS  SECURITY
@@ -17,7 +17,7 @@ $ nmcli device wifi
    ESP_CCE2F9          Infra  1     54 Mbit/s  57      ???_  --
 ```
 
-2.Use the following command to find the device name and MAC address of your WiFi device.   
+## Use the following command to find the device name and MAC address of your WiFi device.   
 __wlx1cbfceaae44d__ is the device name.   
 __1c:bf:ce:aa:e4:4d__ is the MAC address.   
 ```
@@ -42,7 +42,7 @@ wlx1cbfceaae44d: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
-3.Change your WiFi device to monitor mode.   
+## Change your WiFi device to monitor mode.   
 ```
 $ sudo ifconfig wlx1cbfceaae44d down
 
@@ -63,6 +63,15 @@ You can now use the ESP-NOW protocol.
 Clone the repository from github and compile it.   
 Specify the name of the WiFi device in the run-time argument.
 
+## Install MQTT C Client library.   
+```
+$ git clone https://github.com/eclipse/paho.mqtt.c
+$ cd paho.mqtt.c/
+$ make
+$ sudo make install
+```
+
+## Install espnow gateway for linux.   
 ```
 $ git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
 
