@@ -28,10 +28,9 @@
 #include "esp_mac.h"
 #include "esp_system.h"
 #include "esp_now.h"
-
-
 #include "espnow.h"
 #include "mqtt.h"
+#include "mdns.h"
 
 static const char *TAG = "MAIN";
 
@@ -44,13 +43,11 @@ SemaphoreHandle_t xSemaphoreData;
  * - we are connected to the AP with an IP
  * - we failed to connect after the maximum amount of retries */
 #define WIFI_CONNECTED_BIT BIT0
-#define WIFI_FAIL_BIT	   BIT1
-
+#define WIFI_FAIL_BIT BIT1
 
 static int s_retry_num = 0;
 
-static void event_handler(void* arg, esp_event_base_t event_base,
-								int32_t event_id, void* event_data)
+static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
 {
 	if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
 		esp_wifi_connect();
@@ -71,7 +68,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 	}
 }
 
-#define ESPNOW_WIFI_IF   ESP_IF_WIFI_STA
+#define ESPNOW_WIFI_IF ESP_IF_WIFI_STA
 
 /* WiFi should start before using ESPNOW */
 static void initialise_wifi(void)
@@ -126,10 +123,10 @@ static bool wifi_apsta(void)
 	 * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
 	esp_err_t ret = ESP_OK;
 	EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
-			WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
-			pdFALSE,
-			pdFALSE,
-			portMAX_DELAY);
+		WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
+		pdFALSE,
+		pdFALSE,
+		portMAX_DELAY);
 
 	/* xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually
 	 * happened. */
@@ -178,11 +175,18 @@ static void example_espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_
 }
 #endif
 
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
+static void example_espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len)
+#else
 static void example_espnow_recv_cb(const uint8_t *mac_addr, const uint8_t *data, int len)
+#endif
 {
-	ESP_LOGD(TAG, "espnow_recv_cb Start");
+	ESP_LOGD(__FUNCTION__, "len=%d", len);
 	example_espnow_event_t evt;
 	example_espnow_event_recv_cb_t *recv_cb = &evt.info.recv_cb;
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
+	uint8_t * mac_addr = recv_info->src_addr;
+#endif
 
 	if (mac_addr == NULL || data == NULL || len <= 0) {
 		ESP_LOGE(TAG, "Receive cb arg error");
@@ -255,12 +259,18 @@ void app_main(void)
 	}
 	ESP_ERROR_CHECK( ret );
 
+	// Initialize WiFi
 	initialise_wifi();
+
+	// Start APSTA mode
 	if (wifi_apsta() != ESP_OK) {
 		while(1) {
 			vTaskDelay(10);
 		}
 	}
+
+	// Initialize mDNS
+	ESP_ERROR_CHECK( mdns_init() );
 
 	// Create Queue
 	s_espnow_queue = xQueueCreate( 10, sizeof(example_espnow_event_t));

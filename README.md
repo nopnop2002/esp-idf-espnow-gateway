@@ -20,7 +20,8 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 # Battery life after 112 days using ESP-NOW   
 ![ƒXƒ‰ƒCƒh1](https://user-images.githubusercontent.com/6020549/155865309-e554042d-b605-4b3c-9a5b-6d6a881666a8.JPG)
 
----
+# Software requirements
+ESP-IDF V4.4/V5.0.   
 
 # Installation   
 
@@ -31,8 +32,6 @@ idf.py set-target esp32
 idf.py menuconfig
 idf.py flash monitor
 ```
-
----
 
 # Configuration   
 You have to set this config value using menuconfig.   
@@ -51,7 +50,7 @@ When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.
 
 ![config-main](https://user-images.githubusercontent.com/6020549/102085230-aff4ce80-3e59-11eb-85f2-f53babe33f0d.jpg)
 
-![config-app](https://user-images.githubusercontent.com/6020549/173013050-fabf4eeb-bf69-4cab-96e7-8acc2e32b2a6.jpg)
+![config-app](https://user-images.githubusercontent.com/6020549/219843372-dda3a668-082d-46dd-8c98-14c057c1e46c.jpg)
 
 ---
 
