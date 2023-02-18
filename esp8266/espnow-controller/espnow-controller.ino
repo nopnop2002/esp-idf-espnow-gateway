@@ -6,7 +6,9 @@ ADC_MODE(ADC_VCC);
 #define MQTT_TOPIC "/mqtt/espnow"
 
 // REPLACE WITH RECEIVER MAC Address
-uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
+//uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
+//uint8_t remoteDevice[] = {0xDC, 0x4F, 0x22, 0x66, 0x02, 0x5E};
+uint8_t remoteDevice[] = {0x08, 0x3a, 0xf2, 0x50, 0xde, 0x5d};
 
 // Structure example to send data
 // Must match the receiver structure
@@ -47,6 +49,9 @@ void setup() {
 
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
+  uint8_t chnnel = wifi_get_channel();
+  Serial.print("chnnel=");
+  Serial.println(chnnel);
 
   // Init ESP-NOW
   if (esp_now_init() != 0) {
@@ -58,13 +63,9 @@ void setup() {
   // get the status of Trasnmitted packet
   esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
   esp_now_register_send_cb(OnDataSent);
-  esp_now_register_recv_cb(simple_cb);
-  
+
   // Register peer
-  // If the channel is set to 0, data will be sent on the current channel. 
-  esp_now_add_peer(remoteDevice, ESP_NOW_ROLE_SLAVE, 0, NULL, 0);
-  //esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 0, NULL, 0);
-  //esp_now_add_peer(NULL, ESP_NOW_ROLE_CONTROLLER, 1, NULL, 0);
+  esp_now_add_peer(remoteDevice, ESP_NOW_ROLE_SLAVE, 1, NULL, 0);
 }
 
 void loop() {
