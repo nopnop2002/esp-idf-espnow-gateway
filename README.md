@@ -52,6 +52,11 @@ When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.
 
 ![config-app](https://user-images.githubusercontent.com/6020549/219843372-dda3a668-082d-46dd-8c98-14c057c1e46c.jpg)
 
+Specify the MQTT BROKER in one of the following formats.   
+- IP address like 192.168.10.120   
+- mDNS hostname like mqtt-broker.local   
+- Global hostname like broker.emqx.io   
+
 ---
 
 # ESP8266 Example Sketch
