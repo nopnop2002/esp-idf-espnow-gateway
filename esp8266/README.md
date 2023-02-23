@@ -1,3 +1,7 @@
+# Software requirements   
+Arduino core for ESP8266.   
+Use Arduino-IDE or PlatformIO.   
+
 # MAC address of ESP32   
 Replace the remote MAC address with your ESP32 MAC address.
 
