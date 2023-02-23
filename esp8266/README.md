@@ -17,3 +17,16 @@ Change here:
 ```
 #define MQTT_TOPIC "/mqtt/espnow"
 ```
+
+# Using PlatformIO
+```
+$ git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
+
+$ cd esp-idf-espnow-gateway/esp8266/espnow-controller
+
+$ pio init -b d1_mini
+
+$ cp espnow-controller.ino src/
+
+$ pio run -t upload && pio device monitor -b 115200
+```
