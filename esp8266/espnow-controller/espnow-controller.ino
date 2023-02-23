@@ -6,9 +6,9 @@ ADC_MODE(ADC_VCC);
 #define MQTT_TOPIC "/mqtt/espnow"
 
 // REPLACE WITH RECEIVER MAC Address
-//uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
+uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
 //uint8_t remoteDevice[] = {0xDC, 0x4F, 0x22, 0x66, 0x02, 0x5E};
-uint8_t remoteDevice[] = {0x08, 0x3a, 0xf2, 0x50, 0xde, 0x5d};
+//uint8_t remoteDevice[] = {0x08, 0x3a, 0xf2, 0x50, 0xde, 0x5d};
 
 // Structure example to send data
 // Must match the receiver structure
@@ -73,7 +73,7 @@ void loop() {
     lastTime = millis();
     // Set values to send
     strcpy(myData.topic, MQTT_TOPIC); // "/mqtt/espnow";
-    sprintf(myData.payload, "Hello %d %d", lastTime, ESP.getVcc());
+    sprintf(myData.payload, "Hello %lu %d", lastTime, ESP.getVcc());
 
     // Send message via ESP-NOW
     esp_now_send_status = false;
