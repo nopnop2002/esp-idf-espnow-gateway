@@ -20,15 +20,18 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 # Battery life after 112 days using ESP-NOW   
 ![ƒXƒ‰ƒCƒh1](https://user-images.githubusercontent.com/6020549/155865309-e554042d-b605-4b3c-9a5b-6d6a881666a8.JPG)
 
-# Software requirements
+# Software requirements   
 ESP-IDF V4.4/V5.x.   
+ESP-IDF V5.0 is required when using ESP32-C2.   
+ESP-IDF V5.1 is required when using ESP32-C6.   
+
 
 # Installation   
 
 ```
 git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
 cd esp-idf-espnow-gateway
-idf.py set-target esp32
+idf.py set-target {esp32/esp32s2/esp32s3/esp32c2/esp32c3/esp32c6}
 idf.py menuconfig
 idf.py flash monitor
 ```
