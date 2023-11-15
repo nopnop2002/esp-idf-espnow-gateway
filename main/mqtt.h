@@ -1,6 +1,4 @@
-#define	PUBLISH		100
-#define	SUBSCRIBE	200
-#define	STOP		900
+typedef enum {PUBLISH, SUBSCRIBE, STOP} TOPIC_TYPE;
 
 typedef struct {
     int topic_type;

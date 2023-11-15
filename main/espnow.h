@@ -39,8 +39,8 @@ typedef struct {
 
 /* User defined field of ESPNOW data in this example. */
 typedef struct {
-  char topic[64];
-  char payload[64];
+	char topic[64];
+	char payload[64];
 } example_espnow_data_t;
 
 #endif
