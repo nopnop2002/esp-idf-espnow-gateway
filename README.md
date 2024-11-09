@@ -26,7 +26,7 @@ ESP-IDF V5.0 is required when using ESP32-C2.
 ESP-IDF V5.1 is required when using ESP32-C6.   
 
 # Hardware requirements   
-ESP8266/8285.
+ESP8266/8285.   
 Do not use development boards with regulators or LEDs.   
 Because they consume battery even during DeepSleep.   
 I used this.   
