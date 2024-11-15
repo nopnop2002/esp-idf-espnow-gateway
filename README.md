@@ -30,6 +30,7 @@ ESP8266/8285.
 When using the development board, the onboard power LED must be removed.   
 Because they consume battery even during DeepSleep.   
 Since the ESP12 has an LED on the module, it is not suitable for battery operation.   
+Some WeMos D1 Mini clones cannot be started with 3V power supply.   
 
 # Installation   
 
