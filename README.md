@@ -27,13 +27,8 @@ ESP-IDF V5.1 is required when using ESP32-C6.
 
 # Hardware requirements   
 ESP8266/8285.   
-Do not use development boards with regulators or LEDs.   
+When using the development board, the onboard power LED must be removed.   
 Because they consume battery even during DeepSleep.   
-I used this.   
-You can also use a breadboard.   
-![esp8266](https://github.com/user-attachments/assets/970e0ed9-a395-4e28-8483-a1ac39b85bc9)
-![esp8266-2](https://github.com/user-attachments/assets/2f8952da-c212-49fb-976d-1dc29d73428b)
-![esp8266-3](https://github.com/user-attachments/assets/2774084b-8fd5-4ddb-9397-c2b2b555899d)
 
 # Installation   
 
