@@ -29,6 +29,7 @@ ESP-IDF V5.1 is required when using ESP32-C6.
 ESP8266/8285.   
 When using the development board, the onboard power LED must be removed.   
 Because they consume battery even during DeepSleep.   
+Since the ESP12 has an LED on the module, it is not suitable for battery operation.   
 
 # Installation   
 
