@@ -26,13 +26,13 @@ ESP-IDF V5.0 is required when using ESP32-C2.
 ESP-IDF V5.1 is required when using ESP32-C6.   
 
 # Hardware requirements   
-ESP8266/8285.   
-Some development boards have a Power LED.   
-Some development boards have a Serail TX signal LED.   
-They consume battery.   
-Since the ESP12 has an LED on the module, it is not suitable for battery operation.   
-Care should be taken when selecting hardware to reduce battery consumption.   
-Some WeMos D1 Mini clones cannot be started with 3V power supply.   
+- ESP8266/8285.   
+ Some development boards have a Power LED.   
+ Some development boards have a Serail TX signal LED.   
+ They consume battery.   
+ Since the ESP12 has an LED on the module, it is not suitable for battery operation.   
+ Care should be taken when selecting hardware to reduce battery consumption.   
+ Some WeMos D1 Mini clones cannot be started with 3V power supply.   
 
 # Installation   
 
