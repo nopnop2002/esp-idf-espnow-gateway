@@ -20,6 +20,10 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 # Battery life after 112 days using ESP-NOW   
 ![ƒXƒ‰ƒCƒh1](https://user-images.githubusercontent.com/6020549/155865309-e554042d-b605-4b3c-9a5b-6d6a881666a8.JPG)
 
+# Using NodeMCU Development board   
+![NodeMcu](https://github.com/user-attachments/assets/3233df6e-7c2f-4cee-94dd-544fe4f594f2)
+![Chart](https://github.com/user-attachments/assets/e4f870b3-636f-4e48-aa91-2bb6ede0f491)
+
 # Software requirements   
 ESP-IDF V4.4/V5.x.   
 ESP-IDF V5.0 is required when using ESP32-C2.   
