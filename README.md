@@ -23,6 +23,7 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 
 # Using NodeMCU Development board   
 ![NodeMcu](https://github.com/user-attachments/assets/3233df6e-7c2f-4cee-94dd-544fe4f594f2)
+![NodeMcu-2](https://github.com/user-attachments/assets/2bb9e8f7-a726-42a7-9f11-0f3ab890badc)
 ![Chart](https://github.com/user-attachments/assets/e4f870b3-636f-4e48-aa91-2bb6ede0f491)
 
 # Software requirements   
