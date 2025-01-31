@@ -95,7 +95,7 @@ $ mosquitto_sub -v -h broker.emqx.io -p 1883  -t "/mqtt/espnow" | ts "%y/%m/%d %
 
 - espnow-controller-deepSleep   
 Wake up from Deep Sleep every 60 seconds and publish.   
-You need to connect Resets and GPIO16.   
+You need to connect reset pin and GPIO16 with a wire cable.   
 I used broker.emqx.io as MQTT broker.   
 
 ```
