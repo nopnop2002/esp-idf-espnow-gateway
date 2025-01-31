@@ -68,6 +68,8 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
 	}
 }
 
+// ESP32 has ESP_IF_WIFI_STA and ESP_IF_WIFI_AP.
+// ESPNOW uses ESP_IF_WIFI_AP.
 #define ESPNOW_WIFI_IF ESP_IF_WIFI_AP
 
 /* WiFi should start before using ESPNOW */
@@ -82,7 +84,6 @@ static void initialise_wifi(void)
 	assert(sta_netif);
 	wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
 	ESP_ERROR_CHECK( esp_wifi_init(&cfg) );
-	//ESP_ERROR_CHECK( esp_event_handler_register(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &event_handler, NULL) );
 	ESP_ERROR_CHECK( esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &event_handler, NULL) );
 	ESP_ERROR_CHECK( esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, &event_handler, NULL) );
 
@@ -97,9 +98,21 @@ static void initialise_wifi(void)
 
 static bool wifi_start(void)
 {
-	wifi_config_t sta_config = { 0 };
-	strcpy((char *)sta_config.sta.ssid, CONFIG_STA_WIFI_SSID);
-	strcpy((char *)sta_config.sta.password, CONFIG_STA_WIFI_PASS);
+	wifi_config_t sta_config = {
+		.sta = {
+			.ssid = CONFIG_STA_WIFI_SSID,
+			.password = CONFIG_STA_WIFI_PASS,
+			/* Setting a password implies station will connect to all security modes including WEP/WPA.
+			 * However these modes are deprecated and not advisable to be used. Incase your Access point
+			 * doesn't support WPA2, these mode can be enabled by commenting below line */
+			.threshold.authmode = WIFI_AUTH_WPA2_PSK,
+
+			.pmf_cfg = {
+				.capable = true,
+				.required = false
+			},
+		},
+	};
 
 	ESP_ERROR_CHECK( esp_wifi_set_config(ESP_IF_WIFI_STA, &sta_config) );
 
