@@ -3,7 +3,7 @@ Arduino core for ESP8266.
 Use Arduino-IDE or PlatformIO.   
 
 # Configuration
-When you run this project on the ESP32, you will see ESP32 MAC address and WiFi channel:   
+When you run this project on your ESP32, you will see the ESP32's MAC address and the WiFi channel it is using.   
 ![Image](https://github.com/user-attachments/assets/c8f1d109-2512-422e-b65f-d8ee0e996173)
 
 ## MAC address of ESP32   
@@ -12,8 +12,8 @@ Replace the remote MAC address with your ESP32 MAC address.
 uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
 ```
 
-## WiFi channe   
-Replace the WiFi Channel with your ESP32 WiFi channel.
+## WiFi channel   
+Replace the WiFi channel with your ESP32 WiFi channel.
 ```
 uint8 remoteChannel = 11;
 ```
