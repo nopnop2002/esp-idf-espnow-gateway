@@ -4,10 +4,13 @@
 ADC_MODE(ADC_VCC);
 
 #define MQTT_TOPIC "/mqtt/espnow"
+#define SLEEP 60   // 1 minite sleep
 
 // REPLACE WITH RECEIVER MAC Address
-uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
-//uint8_t remoteDevice[] = {0x1c, 0xbf, 0xce, 0xaa, 0xe4, 0x4d};
+uint8_t remoteDevice[] = {0xA4, 0xCF, 0x12, 0x05, 0xC6, 0x35};
+
+// REPLACE WITH RECEIVER WiFi Channel
+uint8 remoteChannel = 11;
 
 // Structure example to send data
 // Must match the receiver structure
@@ -18,9 +21,6 @@ typedef struct struct_message {
 
 // Create a struct_message called myData
 struct_message myData;
-
-unsigned long lastTime = 0;  
-unsigned long timerDelay = 10000;  // send readings timer
 
 bool esp_now_send_status;
 
@@ -41,8 +41,6 @@ void ICACHE_FLASH_ATTR simple_cb(u8 *macaddr, u8 *data, u8 len) {
 
 }
 
-#define SLEEP 60   // 1 minite sleep
-
 void setup() {
   // Init Serial Monitor
   Serial.begin(115200);
@@ -50,9 +48,11 @@ void setup() {
 
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
-  uint8_t chnnel = wifi_get_channel();
-  Serial.print("chnnel=");
-  Serial.println(chnnel);
+  
+  wifi_set_channel(remoteChannel);
+  uint8_t chan = wifi_get_channel();
+  Serial.print("current chanel=");
+  Serial.println(chan);
   
   // Init ESP-NOW
   if (esp_now_init() != 0) {
@@ -70,28 +70,23 @@ void setup() {
 }
 
 void loop() {
-  static int isSended = 0;
-  if (isSended == 0) {
-    lastTime = millis();
-    // Set values to send
-    strcpy(myData.topic, MQTT_TOPIC); // "/mqtt/espnow";
-    sprintf(myData.payload, "Hello %lu %d", lastTime, ESP.getVcc());
+  // Set values to send
+  strcpy(myData.topic, MQTT_TOPIC); // "/mqtt/espnow";
+  sprintf(myData.payload, "Hello %lu %d", millis(), ESP.getVcc());
 
-    // Send message via ESP-NOW
-    esp_now_send_status = false;
-    esp_now_send(remoteDevice, (uint8_t *) &myData, sizeof(myData));
+  // Send message via ESP-NOW
+  esp_now_send_status = false;
+  esp_now_send(remoteDevice, (uint8_t *) &myData, sizeof(myData));
 
-    // Wait until send complete
-    while(1) {
-      if (esp_now_send_status) break;
-      delay(1);
-    }
-
-    isSended = 1;
-    // Goto DEEP SLEEP
-    Serial.println("DEEP SLEEP START!!");
-    uint32_t time_us = SLEEP * 1000 * 1000;
-    ESP.deepSleep(time_us, WAKE_RF_DEFAULT);
-    
+  // Wait until send complete
+  while(1) {
+    if (esp_now_send_status) break;
+    delay(1);
   }
+
+  // Goto DEEP SLEEP
+  Serial.println("DEEP SLEEP START!!");
+  uint32_t time_us = SLEEP * 1000 * 1000;
+  ESP.deepSleep(time_us, WAKE_RF_DEFAULT);
+  delay(1000);
 }

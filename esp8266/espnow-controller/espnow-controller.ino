@@ -3,16 +3,19 @@
 
 ADC_MODE(ADC_VCC);
 
+// REPLACE WITH Publish mqtt topic
 #define MQTT_TOPIC "/mqtt/espnow"
 
 // REPLACE WITH RECEIVER MAC Address
-uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
-//uint8_t remoteDevice[] = {0xDC, 0x4F, 0x22, 0x66, 0x02, 0x5E};
-//uint8_t remoteDevice[] = {0x08, 0x3a, 0xf2, 0x50, 0xde, 0x5d};
+uint8_t remoteDevice[] = {0xA4, 0xCF, 0x12, 0x05, 0xC6, 0x35};
+
+// REPLACE WITH RECEIVER WiFi Channel
+uint8 remoteChannel = 11;
 
 // Structure example to send data
 // Must match the receiver structure
 typedef struct struct_message {
+  
   char topic[64];
   char payload[64];
 } struct_message;
@@ -21,7 +24,7 @@ typedef struct struct_message {
 struct_message myData;
 
 unsigned long lastTime = 0;  
-unsigned long timerDelay = 10000;  // send readings timer
+unsigned long timerDelay = 10000;  // send interval(10 Sec)
 
 bool esp_now_send_status;
 
@@ -49,9 +52,11 @@ void setup() {
 
   // Set device as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
-  uint8_t chnnel = wifi_get_channel();
-  Serial.print("chnnel=");
-  Serial.println(chnnel);
+
+  wifi_set_channel(remoteChannel);
+  uint8_t chan = wifi_get_channel();
+  Serial.print("current chanel=");
+  Serial.println(chan);
 
   // Init ESP-NOW
   if (esp_now_init() != 0) {
@@ -66,6 +71,7 @@ void setup() {
 
   // Register peer
   esp_now_add_peer(remoteDevice, ESP_NOW_ROLE_SLAVE, 1, NULL, 0);
+  lastTime = 0;
 }
 
 void loop() {

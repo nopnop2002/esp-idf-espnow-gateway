@@ -2,18 +2,24 @@
 Arduino core for ESP8266.   
 Use Arduino-IDE or PlatformIO.   
 
-# MAC address of ESP32   
-Replace the remote MAC address with your ESP32 MAC address.
+# Configuration
+When you run this project on the ESP32, you will see ESP32 MAC address and WiFi channel:   
+![Image](https://github.com/user-attachments/assets/c8f1d109-2512-422e-b65f-d8ee0e996173)
 
+## MAC address of ESP32   
+Replace the remote MAC address with your ESP32 MAC address.
 ```
 uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
 ```
 
-When you run this project on the ESP32, you will see ESP32 MAC address:   
-![mac](https://user-images.githubusercontent.com/6020549/102291484-8dac9f00-3f86-11eb-804a-d06e7e813e02.jpg)
+## WiFi channe   
+Replace the WiFi Channel with your ESP32 WiFi channel.
+```
+uint8 remoteChannel = 11;
+```
 
-# MQTT topic
-Change here:   
+## MQTT topic
+Replace the mqtt topic to publish.
 ```
 #define MQTT_TOPIC "/mqtt/espnow"
 ```
