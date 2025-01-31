@@ -9,7 +9,7 @@ When you run this project on your ESP32, you will see the ESP32's MAC address an
 ## MAC address of ESP32   
 Replace the remote MAC address with your ESP32 MAC address.
 ```
-uint8_t remoteDevice[] = {0x24, 0x0a, 0xc4, 0xef, 0xaa, 0x65};
+uint8_t remoteDevice[] = {0xA4, 0xCF, 0x12, 0x05, 0xC6, 0x35};
 ```
 
 ## WiFi channel   
