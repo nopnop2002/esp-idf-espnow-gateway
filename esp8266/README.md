@@ -13,7 +13,9 @@ uint8_t remoteDevice[] = {0xA4, 0xCF, 0x12, 0x05, 0xC6, 0x35};
 ```
 
 ## WiFi channel   
-Replace the WiFi channel with your ESP32 WiFi channel.
+Replace the WiFi channel with your ESP32 WiFi channel.   
+ESPNOW uses channel #1 by default, but if you enable Station Mode WiFi Connection, your WiFi connection will use other channels.   
+Therefore, you will need to change the WiFi channel that ESPNOW uses if you use it at the same time as WiFi.   
 ```
 uint8 remoteChannel = 11;
 ```
