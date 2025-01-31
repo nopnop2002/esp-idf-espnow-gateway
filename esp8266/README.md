@@ -4,7 +4,7 @@ Use Arduino-IDE or PlatformIO.
 
 # Configuration
 When you run this project on your ESP32, you will see the ESP32's MAC address and the WiFi channel it is using.   
-![Image](https://github.com/user-attachments/assets/c8f1d109-2512-422e-b65f-d8ee0e996173)
+![Image](https://github.com/user-attachments/assets/8ce882d2-1e52-47fd-8eed-81ef655390d1)
 
 ## MAC address of ESP32   
 Replace the remote MAC address with your ESP32 MAC address.
