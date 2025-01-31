@@ -27,8 +27,8 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 ![Chart](https://github.com/user-attachments/assets/e4f870b3-636f-4e48-aa91-2bb6ede0f491)
 
 # Software requirements   
-ESP-IDF V4.4/V5.x.   
-ESP-IDF V5.0 is required when using ESP32-C2.   
+ESP-IDF V5.0 or later.   
+ESP-IDF V4.4 release branch reached EOL in July 2024.   
 ESP-IDF V5.1 is required when using ESP32-C6.   
 
 # Hardware requirements   
