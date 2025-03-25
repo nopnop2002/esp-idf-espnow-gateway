@@ -20,6 +20,7 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 
 # Battery life after 112 days using ESP-NOW   
 This is the measurement result when the DeepSleep interval was ```600 seconds```.   
+Two AA batteries will give you about four months of operation.   
 ![ƒXƒ‰ƒCƒh1](https://user-images.githubusercontent.com/6020549/155865309-e554042d-b605-4b3c-9a5b-6d6a881666a8.JPG)
 
 # Using NodeMCU Development board   
