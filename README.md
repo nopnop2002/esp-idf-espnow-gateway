@@ -19,6 +19,7 @@ This is a comparison of battery consumption between Wifi and ESP-NOW.
 ![スライド2](https://user-images.githubusercontent.com/6020549/104807010-d9b96080-581e-11eb-8265-82b2fa0450f3.JPG)
 
 # Battery life after 112 days using ESP-NOW   
+This is the measurement result when the DeepSleep interval was ``600 seconds```.   
 ![スライド1](https://user-images.githubusercontent.com/6020549/155865309-e554042d-b605-4b3c-9a5b-6d6a881666a8.JPG)
 
 # Using NodeMCU Development board   
