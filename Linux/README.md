@@ -35,7 +35,7 @@ wlx1cbfceaae44d  IEEE 802.11  ESSID:off/any
 
 $ sudo ifconfig wlx1cbfceaae44d
 wlx1cbfceaae44d: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
-        ether 1c:bf:ce:aa:e4:4d  txqueuelen 1000  (イーサネット)
+        ether 1c:bf:ce:aa:e4:4d  txqueuelen 1000  (Ethernet)
         RX packets 0  bytes 0 (0.0 B)
         RX errors 0  dropped 0  overruns 0  frame 0
         TX packets 0  bytes 0 (0.0 B)
