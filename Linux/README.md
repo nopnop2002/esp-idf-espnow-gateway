@@ -49,12 +49,17 @@ $ sudo ifconfig wlx1cbfceaae44d down
 $ sudo iwconfig wlx1cbfceaae44d mode monitor
 
 $ sudo ifconfig wlx1cbfceaae44d up
+```
+
+- Specify the WiFi channel you want to use.   
+```
+$ sudo iwconfig wlx1cbfceaae44d channel 11
 
 $ sudo ifconfig wlx1cbfceaae44d
 wlx1cbfceaae44d: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
-        unspec 1C-BF-CE-AA-E4-4D-00-00-00-00-00-00-00-00-00-00  txqueuelen 1000  (不明なネット)
-        RX packets 2412317  bytes 380570756 (380.5 MB)
-        RX errors 0  dropped 109773  overruns 0  frame 0
+        unspec 1C-BF-CE-AA-E4-4D-00-00-00-00-00-00-00-00-00-00  txqueuelen 1000  (UNSPEC)
+        RX packets 19666  bytes 4191675 (4.1 MB)
+        RX errors 0  dropped 2390  overruns 0  frame 0
         TX packets 0  bytes 0 (0.0 B)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
@@ -77,12 +82,20 @@ $ sudo make install
 $ cd $HOME
 $ git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
 $ cd esp-idf-espnow-gateway/Linux
+
+# Specify the MQTT broker you want to use.
+$ vi main.c
+#define ADDRESS     "tcp://broker.emqx.io"
+//#define ADDRESS     "tcp://broker.hivemq.com:1883"
+
 $ make
 mkdir -p bin
 gcc main.c -Wall -o bin/receiver
-$ sudo ./bin/receiver wlx1cbfceaae44d
 
- Waiting to receive packets ........
+$ sudo ./bin/receiver wlx1cbfceaae44d
+Connecting to tcp://broker.emqx.io
+
+Waiting to receive packets ........
 myData.topic=[/mqtt/espnow]
 myData.payload=[Hello 738369 3089]
 Waiting for up to 10 seconds for publication

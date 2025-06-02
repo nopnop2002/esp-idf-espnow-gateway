@@ -35,14 +35,14 @@ $ sudo ifconfig wlp5s0 up
 #include <time.h>
 #include "MQTTClient.h"
 
+#define ADDRESS     "tcp://broker.emqx.io"
 //#define ADDRESS     "tcp://broker.hivemq.com:1883"
-#define ADDRESS     "tcp://192.168.10.40:1883"
-#define QOS         1
+#define QOS	    1
 #define RETAINED    0
 #define TIMEOUT     10000L
 
 #define PACKET_LENGTH 400 //Approximate
-#define MYDATA 18         //0x12
+#define MYDATA 18	  //0x12
 #define MAX_PACKET_LEN 1000
 
 //#define LOGGING
@@ -97,9 +97,9 @@ void print_packet(uint8_t *data, int len)
     int i;
     for (i = 0; i < len; i++)
     {
-        if (i % 16 == 0)
-            printf("\n");
-        printf("0x%02x, ", data[i]);
+	if (i % 16 == 0)
+	    printf("\n");
+	printf("0x%02x, ", data[i]);
     }
     printf("\n\n");
 }
@@ -170,79 +170,80 @@ int main(int argc, char **argv)
     char clientId[40];
     pid_t c_pid = getpid();
     sprintf(clientId, "CLIENT-%d", c_pid);
-    printf("clientId=%s\n", clientId);
+    //printf("clientId=%s\n", clientId);
+    printf("Connecting to %s\n", ADDRESS);
     MQTTClient_create(&client, ADDRESS, clientId, MQTTCLIENT_PERSISTENCE_NONE, NULL);
     conn_opts.keepAliveInterval = 20;
     conn_opts.cleansession = 1;
 
     if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
     {
-        printf("Failed to connect, return code %d\n", rc);
-        exit(-1);
+	printf("Failed to connect, return code %d\n", rc);
+	exit(-1);
     }
 
-    printf("\n Waiting to receive packets ........ \n");
+    printf("\nWaiting to receive packets ........ \n");
 
     while (1)
     {
-        fd_set fds;
-        FD_ZERO(&fds);
-        FD_SET(sock_fd, &fds);
-        struct timeval tv;
-        tv.tv_sec = 10;
-        tv.tv_usec = 0;
-        int received = select(sock_fd+1, &fds, NULL, NULL, &tv);
-        printf("received=%d\n",received);
-        if (received == 0) {
-            MQTTClient_yield();
-            continue;
-        }
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(sock_fd, &fds);
+	struct timeval tv;
+	tv.tv_sec = 10;
+	tv.tv_usec = 0;
+	int received = select(sock_fd+1, &fds, NULL, NULL, &tv);
+	printf("received=%d\n",received);
+	if (received == 0) {
+	    MQTTClient_yield();
+	    continue;
+	}
 
-        int len = recvfrom(sock_fd, buff, MAX_PACKET_LEN, MSG_TRUNC, NULL, 0);
+	int len = recvfrom(sock_fd, buff, MAX_PACKET_LEN, MSG_TRUNC, NULL, 0);
 
-        if (len < 0)
-        {
-            perror("Socket receive failed or error");
-            break;
-        }
+	if (len < 0)
+	{
+	    perror("Socket receive failed or error");
+	    break;
+	}
 
-        //printf("len:%d\n", len);
-        //print_packet(buff, len);
-        //print_packet(&buff[63], len-63);
-        memcpy(myData.topic, &buff[63], sizeof(myData.topic));
-        memcpy(myData.payload, &buff[127], sizeof(myData.payload));
-        printf("myData.topic=[%s]\n",myData.topic);
-        printf("myData.payload=[%s]\n",myData.payload);
+	//printf("len:%d\n", len);
+	//print_packet(buff, len);
+	//print_packet(&buff[63], len-63);
+	memcpy(myData.topic, &buff[63], sizeof(myData.topic));
+	memcpy(myData.payload, &buff[127], sizeof(myData.payload));
+	printf("myData.topic=[%s]\n",myData.topic);
+	printf("myData.payload=[%s]\n",myData.payload);
 
 #ifdef LOGGING
-        FILE *fp = fopen(logPath, "a+");
-        if (fp) {
-            time_t timer = time(NULL); 
-            struct tm *local; 
-            local = localtime(&timer);
-            int year = local->tm_year + 1900;
-            int month = local->tm_mon + 1;
-            int day = local->tm_mday;
-            int hour = local->tm_hour;
-            int minute = local->tm_min;
-            int second = local->tm_sec;
-            
-            fprintf(fp, "%d/%02d/%02d %02d:%02d:%02d %s %s\n", 
-            year,month,day,hour,minute,second,myData.topic, myData.payload);
-            fclose(fp);
-        }
+	FILE *fp = fopen(logPath, "a+");
+	if (fp) {
+	    time_t timer = time(NULL); 
+	    struct tm *local; 
+	    local = localtime(&timer);
+	    int year = local->tm_year + 1900;
+	    int month = local->tm_mon + 1;
+	    int day = local->tm_mday;
+	    int hour = local->tm_hour;
+	    int minute = local->tm_min;
+	    int second = local->tm_sec;
+	    
+	    fprintf(fp, "%d/%02d/%02d %02d:%02d:%02d %s %s\n", 
+	    year,month,day,hour,minute,second,myData.topic, myData.payload);
+	    fclose(fp);
+	}
 #endif
 
-        pubmsg.payload = &myData.payload;
-        pubmsg.payloadlen = strlen(myData.payload);
-        pubmsg.qos = QOS;
-        pubmsg.retained = RETAINED;
-        MQTTClient_publishMessage(client, myData.topic, &pubmsg, &token);
-        printf("Waiting for up to %d seconds for publication\n"
-        "on topic %s for client with ClientID: %s\n", (int)(TIMEOUT/1000), myData.topic, clientId);
-        rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
-        printf("Message with delivery token %d delivered\n", token);
-        //sleep(1);
+	pubmsg.payload = &myData.payload;
+	pubmsg.payloadlen = strlen(myData.payload);
+	pubmsg.qos = QOS;
+	pubmsg.retained = RETAINED;
+	MQTTClient_publishMessage(client, myData.topic, &pubmsg, &token);
+	printf("Waiting for up to %d seconds for publication\n"
+	"on topic %s for client with ClientID: %s\n", (int)(TIMEOUT/1000), myData.topic, clientId);
+	rc = MQTTClient_waitForCompletion(client, token, TIMEOUT);
+	printf("Message with delivery token %d delivered\n", token);
+	//sleep(1);
     } // end while
 
     // never reach here
