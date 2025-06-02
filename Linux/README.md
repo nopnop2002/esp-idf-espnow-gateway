@@ -65,6 +65,7 @@ Specify the name of the WiFi device in the run-time argument.
 
 - Install MQTT C Client library.   
 ```
+$ sudo apt install libssl-dev
 $ git clone https://github.com/eclipse/paho.mqtt.c
 $ cd paho.mqtt.c/
 $ make
@@ -73,14 +74,12 @@ $ sudo make install
 
 - Install espnow gateway for linux.   
 ```
+$ cd $HOME
 $ git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
-
 $ cd esp-idf-espnow-gateway/Linux
-
 $ make
 mkdir -p bin
 gcc main.c -Wall -o bin/receiver
-
 $ sudo ./bin/receiver wlx1cbfceaae44d
 
  Waiting to receive packets ........
