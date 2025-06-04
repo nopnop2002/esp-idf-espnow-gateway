@@ -53,6 +53,7 @@ I tried it on Ubuntu 20.04.
 	```
 
 - Specify the WiFi channel you want to use.   
+	The WiFi channel must match the ESP8266.   
 	```
 	$ sudo iwconfig wlx1cbfceaae44d channel 11
 
