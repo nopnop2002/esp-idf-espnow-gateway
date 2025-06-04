@@ -141,6 +141,7 @@ Specify the name of the WiFi device in the run-time argument.
 	The default MQTT broker is broker.emqx.io.   
 	You can change the MQTT broker by specifying arguments at startup.   
 	```
+	$ cd ESPythoNOW
 	$ sudo -E python3 main.py --help
 	usage: main.py [-h] [--host HOST] [--port PORT] --interface INTERFACE
 
