@@ -139,6 +139,17 @@ $ cp esp-idf-espnow-gateway/main.py ESPythoNOW/
 
 - Start gateway   
 ```
+$ sudo -E python3 main.py --help
+usage: main.py [-h] [--host HOST] [--port PORT] --interface INTERFACE
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --host HOST           mqtt host to connect to
+  --port PORT           mqtt port to connect to
+  --interface INTERFACE
+                        espnow interface
+
+
 $ sudo -E python3 main.py --interface wlx1cbfceaae44d
 host=broker.emqx.io
 port=1883
