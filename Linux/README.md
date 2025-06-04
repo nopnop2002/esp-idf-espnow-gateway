@@ -1,7 +1,8 @@
 # Linux version of Gateway
-
-I ported from [here](https://github.com/thomasfla/Linux-ESPNOW).   
+You can use a Linux PC as a Gateway.   
 I tried it on Ubuntu 20.04.   
+
+# Hardware setting   
 
 - Insert a USB-WiFi dongle into your Linux machine and use the following command to see if the driver supports it.
 ```
@@ -65,8 +66,11 @@ wlx1cbfceaae44d: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
 ```
 
 You can now use the ESP-NOW protocol.   
+
+# C Language 
+I ported from [here](https://github.com/thomasfla/Linux-ESPNOW).   
 Clone the repository from github and compile it.   
-Specify the name of the WiFi device in the run-time argument.
+Specify the name of the WiFi device in the run-time argument.   
 
 - Install MQTT C Client library.   
 ```
@@ -91,7 +95,10 @@ $ vi main.c
 $ make
 mkdir -p bin
 gcc main.c -Wall -o bin/receiver
+```
 
+- Start gateway   
+```
 $ sudo ./bin/receiver wlx1cbfceaae44d
 Connecting to tcp://broker.emqx.io
 
@@ -112,6 +119,39 @@ Waiting for up to 10 seconds for publication
 on topic /mqtt/espnow for client with ClientID: ExampleClientPub
 Message with delivery token 3 delivered
 
+```
+
+# Python Language 
+I find [this](https://github.com/ChuckMash/ESPythoNOW) python library.   
+We can build the gateway in python.   
+Specify the name of the WiFi device in the run-time argument.   
+
+
+- Install Linux/Python ESP-NOW library.   
+```
+$ sudo apt install python3-pip python3-setuptools
+$ python3 -m pip install scapy==2.5.0
+$ python3 -m pip install paho-mqtt
+$ git clone https://github.com/ChuckMash/ESPythoNOW
+$ cp main.py ESPythoNOW/
+```
+
+- Start gateway   
+```
+$ sudo -E python3 main.py --interface wlx1cbfceaae44d
+host=broker.emqx.io
+port=1883
+interface=wlx1cbfceaae44d
+on_connect reason_code: Success
+topic=[/mqtt/espnow] payload=[Hello 92529252 2968]
+topic=[12] payload=[19]
+on_publish mid: 1
+topic=[/mqtt/espnow] payload=[Hello 92539253 2970]
+topic=[12] payload=[19]
+on_publish mid: 2
+topic=[/mqtt/espnow] payload=[Hello 92549254 2972]
+topic=[12] payload=[19]
+on_publish mid: 3
 ```
 
 # ESP8266 Example Sketch
