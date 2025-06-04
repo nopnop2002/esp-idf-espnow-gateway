@@ -129,11 +129,12 @@ Specify the name of the WiFi device in the run-time argument.
 
 - Install Linux/Python ESP-NOW library.   
 ```
+$ cd $HOME
 $ sudo apt install python3-pip python3-setuptools
 $ python3 -m pip install scapy==2.5.0
 $ python3 -m pip install paho-mqtt
 $ git clone https://github.com/ChuckMash/ESPythoNOW
-$ cp main.py ESPythoNOW/
+$ cp esp-idf-espnow-gateway/main.py ESPythoNOW/
 ```
 
 - Start gateway   
