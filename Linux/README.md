@@ -138,6 +138,8 @@ $ cp esp-idf-espnow-gateway/main.py ESPythoNOW/
 ```
 
 - Start gateway   
+The default MQTT broker is broker.emqx.io.   
+You can change the MQTT broker by specifying arguments at startup.   
 ```
 $ sudo -E python3 main.py --help
 usage: main.py [-h] [--host HOST] [--port PORT] --interface INTERFACE
