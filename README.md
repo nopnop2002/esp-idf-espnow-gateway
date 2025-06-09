@@ -55,28 +55,59 @@ idf.py flash monitor
 ```
 
 # Configuration   
-You have to set this config value using menuconfig.   
+![Image](https://github.com/user-attachments/assets/cb29c75b-6743-42a7-80b0-abb95d972abf)
+![Image](https://github.com/user-attachments/assets/f5a0a948-fae8-4966-95e1-c9938af1b406)
 
-- CONFIG_STA_WIFI_SSID   
-SSID of your wifi.
-- CONFIG_STA_WIFI_PASSWORD   
-PASSWORD of your wifi.
-- CONFIG_STA_MAXIMUM_RETRY   
-Maximum number of retries when connecting to wifi.
-- CONFIG_BROKER_URL   
-URL of MQTT broker.
-- CONFIG_ESPNOW_ENABLE_LONG_RANGE   
-Enable long-range ESP-NOW.   
-When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps.   
+## WiFi Setting
+Set the information of your access point.   
+![Image](https://github.com/user-attachments/assets/08f9f659-b3f4-4bdc-b782-4ab10cbe9cb5)
 
-![config-main](https://user-images.githubusercontent.com/6020549/102085230-aff4ce80-3e59-11eb-85f2-f53babe33f0d.jpg)
+## Broker Setting
+Set the information of your MQTT broker.   
+![Image](https://github.com/user-attachments/assets/71a4ec4e-87c8-49c8-96a6-5b1711ee34c1)
 
-![config-app](https://user-images.githubusercontent.com/6020549/219843372-dda3a668-082d-46dd-8c98-14c057c1e46c.jpg)
+### Select Transport   
+This project supports TCP,SSL/TLS,WebSocket and WebSocket Secure Port.   
 
-Specify the MQTT BROKER in one of the following formats.   
-- IP address like 192.168.10.120   
-- mDNS hostname like mqtt-broker.local   
-- Global hostname like broker.emqx.io   
+- Using TCP Port.   
+	TCP Port uses the MQTT protocol.   
+
+- Using SSL/TLS Port.   
+	SSL/TLS Port uses the MQTTS protocol instead of the MQTT protocol.   
+
+- Using WebSocket Port.   
+	WebSocket Port uses the WS protocol instead of the MQTT protocol.   
+
+- Using WebSocket Secure Port.   
+	WebSocket Secure Port uses the WSS protocol instead of the MQTT protocol.   
+
+__Note for using secure port.__   
+The default MQTT server is ```broker.emqx.io```.   
+If you use a different server, you will need to modify ```getpem.sh``` to run.   
+```
+chmod 777 getpem.sh
+./getpem.sh
+```
+### Specifying an MQTT Broker   
+You can specify your MQTT broker in one of the following ways:   
+- IP address   
+ ```192.168.10.20```   
+- mDNS host name   
+ ```mqtt-broker.local```   
+- Fully Qualified Domain Name   
+ ```broker.emqx.io```
+
+You can use this as broker.   
+https://github.com/nopnop2002/esp-idf-mqtt-broker
+
+### Select MQTT Protocol   
+This project supports MQTT Protocol V3.1.1/V5.   
+![Image](https://github.com/user-attachments/assets/a6898216-03e6-49b3-b482-c49a007dd373)
+
+### Enable Secure Option   
+Specifies the username and password if the server requires a password when connecting.   
+[Here's](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-the-mosquitto-mqtt-messaging-broker-on-debian-10) how to install and secure the Mosquitto MQTT messaging broker on Debian 10.   
+![Image](https://github.com/user-attachments/assets/5990c9aa-8fa9-4c96-8631-fc0260c62704)
 
 ---
 

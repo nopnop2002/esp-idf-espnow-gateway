@@ -1,33 +1,131 @@
 menu "Application Configuration"
 
-	config STA_WIFI_SSID
-		string "WiFi SSID of STA mode"
-		default "myssid"
-		help
-			SSID (network name) for to connect to.
+	menu "WiFi Setting"
 
-	config STA_WIFI_PASS
-		string "WiFi Password of STA mode"
-		default "mypassword"
-		help
-			WiFi password (WPA or WPA2) to use.
+		config STA_WIFI_SSID
+			string "WiFi SSID of STA mode"
+			default "myssid"
+			help
+				SSID (network name) for to connect to.
 
-	config STA_MAXIMUM_RETRY
-		int "Maximum retry"
-		default 5
-		help
-			Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+		config STA_WIFI_PASS
+			string "WiFi Password of STA mode"
+			default "mypassword"
+			help
+				WiFi password (WPA or WPA2) to use.
 
-	config MQTT_BROKER
-		string "MQTT Broker"
-		default "broker.emqx.io"
-		help
-			Host name or IP address of the broker to connect to
+		config STA_MAXIMUM_RETRY
+			int "Maximum retry"
+			default 5
+			help
+				Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
 
-	config ESPNOW_ENABLE_LONG_RANGE
-		bool "Enable Long Range"
-		default "n"
-		help
-			When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps
+		config ESPNOW_ENABLE_LONG_RANGE
+			bool "Enable Long Range for ESPNOW"
+			default "n"
+			help
+				When enable long range, the PHY rate of ESP32 will be 512Kbps or 256Kbps
+
+	endmenu
+
+	menu "Broker Setting"
+
+		choice MQTT_TRANSPORT
+			prompt "MQTT Transport"
+			default MQTT_TRANSPORT_OVER_TCP
+			help
+				Select MQTT Transport.
+			config MQTT_TRANSPORT_OVER_TCP
+				bool "Using Over TCP"
+				help
+					Using Over TCP
+			config MQTT_TRANSPORT_OVER_SSL
+				bool "Using over SSL"
+				help
+					Using over SSL
+			config MQTT_TRANSPORT_OVER_WS
+				bool "Using over WS"
+				help
+					Using over WS
+			config MQTT_TRANSPORT_OVER_WSS
+				bool "Using over WSS"
+				help
+					Using over WSS
+		endchoice
+
+		config MQTT_BROKER
+			string "MQTT Broker"
+			default "broker.emqx.io"
+			help
+				Host name or IP address of the broker to connect to
+
+		config MQTT_PORT_TCP
+			depends on MQTT_TRANSPORT_OVER_TCP
+			int "MQTT Port"
+			range 0 65535
+			default 1883
+			help
+				Port number of the broker to connect to.
+
+		config MQTT_PORT_SSL
+			depends on MQTT_TRANSPORT_OVER_SSL
+			int "MQTT Port"
+			range 0 65535
+			default 8883
+			help
+				Port number of the broker to connect to.
+
+		config MQTT_PORT_WS
+			depends on MQTT_TRANSPORT_OVER_WS
+			int "MQTT Port"
+			range 0 65535
+			default 8083
+			help
+				Port number of the broker to connect to.
+
+		config MQTT_PORT_WSS
+			depends on MQTT_TRANSPORT_OVER_WSS
+			int "MQTT Port"
+			range 0 65535
+			default 8084
+			help
+				Port number of the broker to connect to.
+
+		choice MQTT_PROTOCOL
+			prompt "MQTT Protocol"
+			default MQTT_PROTOCOL_V_3_1_1
+			help
+				Select Protocol.
+			config MQTT_PROTOCOL_V_3_1_1
+				bool "PROTOCOL_V_3_1_1"
+				help
+					PROTOCOL_V_3_1_1
+			config MQTT_PROTOCOL_V_5
+				bool "PROTOCOL_V_5"
+				help
+					PROTOCOL_V_5.
+		endchoice
+
+		config BROKER_AUTHENTICATION
+			bool "Server requests for password when connecting"
+			default false
+			help
+				Server requests for password when connecting.
+
+		config AUTHENTICATION_USERNAME
+			depends on BROKER_AUTHENTICATION
+			string "Username used for connecting to the broker"
+			default "user"
+			help
+				Username used for connecting to the broker.
+
+		config AUTHENTICATION_PASSWORD
+			depends on BROKER_AUTHENTICATION
+			string "Password used for connecting to the broker"
+			default "password"
+			help
+				Username used for connecting to the broker.
+
+	endmenu
 
 endmenu

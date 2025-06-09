@@ -96,7 +96,7 @@ static void initialise_wifi(void)
 #endif
 }
 
-static bool wifi_start(void)
+static esp_err_t wifi_start(void)
 {
 	wifi_config_t sta_config = {
 		.sta = {
