@@ -93,6 +93,7 @@ $ sudo ./bin/receiver wlx1cbfceaae44d
 
 
 - For ESPNOW Version 1.0
+The maximum data length is 250 bytes.   
 ```
 len:313
 ----------------------------new packet-----------------------------------
@@ -145,6 +146,7 @@ Body Length:  250
 ```
 
 - For ESPNOW Version 2.0
+The maximum data length is 1470 bytes.   
 ```
 len:570
 ----------------------------new packet-----------------------------------
