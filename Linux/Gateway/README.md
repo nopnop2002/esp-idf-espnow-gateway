@@ -1,6 +1,6 @@
 # Linux version of Gateway
 You can use a Linux PC as a Gateway.   
-I tried it on Ubuntu 20.04.   
+I tried it on Ubuntu 22.04.   
 
 # Hardware setting   
 
@@ -86,7 +86,7 @@ Specify the name of the WiFi device in the run-time argument.
 	```
 	$ cd $HOME
 	$ git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
-	$ cd esp-idf-espnow-gateway/Linux
+	$ cd esp-idf-espnow-gateway/Linux/Gateway
 
 	# Specify the MQTT broker you want to use.
 	$ vi main.c
@@ -95,12 +95,12 @@ Specify the name of the WiFi device in the run-time argument.
 
 	$ make
 	mkdir -p bin
-	gcc main.c -Wall -o bin/receiver
+	gcc main.c -Wall -o bin/gateway
 	```
 
 - Start gateway   
 	```
-	$ sudo ./bin/receiver wlx1cbfceaae44d
+	$ sudo ./bin/gateway wlx1cbfceaae44d
 	Connecting to tcp://broker.emqx.io
 
 	Waiting to receive packets ........
@@ -134,7 +134,7 @@ Specify the name of the WiFi device in the run-time argument.
 	$ python3 -m pip install scapy==2.5.0
 	$ python3 -m pip install paho-mqtt
 	$ git clone https://github.com/ChuckMash/ESPythoNOW
-	$ cp esp-idf-espnow-gateway/main.py ESPythoNOW/
+	$ cp esp-idf-espnow-gateway/Gateway/main.py ESPythoNOW/
 	```
 
 - Start gateway   
