@@ -78,7 +78,7 @@ idf.py menuconfig
 idf.py flash monitor
 ```
 
-# Install for linux.   
+# Install for linux   
 ```
 $ cd $HOME
 $ git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
