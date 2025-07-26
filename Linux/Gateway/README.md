@@ -1,5 +1,6 @@
 # Linux version of Gateway
 You can use a Linux PC as a Gateway.   
+I based this off of [this](https://github.com/thomasfla/Linux-ESPNOW/tree/master/wifiRawReceiver).   
 I tried it on Ubuntu 22.04.   
 
 # Hardware setting   
