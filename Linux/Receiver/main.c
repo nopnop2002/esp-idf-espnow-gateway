@@ -66,14 +66,26 @@ void print_packet(uint8_t *data, int len)
 {
 	printf("----------------------------new packet-----------------------------------\n");
 	int i;
-	for (i = 0; i < len; i++)
-	{
+	for (i = 0; i < len; i++) {
 		if (i % 16 == 0) printf("\n");
 		printf("0x%02x, ", data[i]);
 	}
 	printf("\n\n");
 
-	int offset = 56;
+	int offset = 24;
+	printf("MAC Header:");
+	for (i = 0; i < 24; i++) {
+		printf(" 0x%.02x", data[offset]);
+		offset++;
+	}
+	printf("\n");
+
+	printf("Category Code: 0x%.02x\n", data[offset]);
+	printf("Organization Identifier: 0x%.02x-0x%.02x-0x%.02x\n", data[offset+1], data[offset+2], data[offset+3]);
+	printf("Random Values: 0x%.02x-0x%.02x-0x%.02x-0x%.02x\n", data[offset+4], data[offset+5], data[offset+6], data[offset+7]);
+	printf("\n");
+
+	offset = 56;
 	while(1) {
 		printf("Element ID: 0x%.02x\n", data[offset]);
 		printf("Length: 0x%.02x\n", data[offset+1]);
@@ -85,8 +97,7 @@ void print_packet(uint8_t *data, int len)
 		printf("Version: 0x%.02x\n", version);
 		int bodyLength = data[offset+1] - 5;
 		printf("Body Length:  %d\n", bodyLength);
-		for (i = 0; i < bodyLength; i++)
-		{
+		for (i = 0; i < bodyLength; i++) {
 			if (i % 16 == 0) printf("\n");
 			printf("0x%02x, ", data[i+offset+7]);
 		}
