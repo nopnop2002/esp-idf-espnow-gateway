@@ -17,6 +17,7 @@ $ iwconfig
 $ sudo ifconfig wlp5s0 down
 $ sudo iwconfig wlp5s0 mode monitor
 $ sudo ifconfig wlp5s0 up
+$ sudo iwconfig wlp5s0 channel 11
 
 3/Run this code as root
 */
@@ -148,8 +149,12 @@ int main(int argc, char **argv)
 	struct sock_fprog bpf = {FILTER_LENGTH, bpfcode};
 
 	sock_fd = create_raw_socket(dev, &bpf); /* Creating the raw socket */
+	if (sock_fd == -1) {
+		perror("Could not create the socket");
+		return 1;
+	}
 
-	printf("\n Waiting to receive packets ........ \n");
+	printf("\nWaiting to receive packets ........ \n");
 
 	while (1)
 	{
