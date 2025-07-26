@@ -1,6 +1,6 @@
 # Linux version of Receiver
 You can view ESPNOW packets on your Linux PC.   
-I based this off of [this](https://github.com/thomasfla/Linux-ESPNOW/tree/master/wifiRawReceiver).
+I based this off of [this](https://github.com/thomasfla/Linux-ESPNOW/tree/master/wifiRawReceiver).   
 I tried it on Ubuntu 22.04.   
 
 # Hardware setting   
