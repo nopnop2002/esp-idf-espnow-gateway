@@ -53,7 +53,7 @@ I tried it on Ubuntu 22.04.
 	```
 
 - Specify the WiFi channel you want to use.   
-	The WiFi channel must match the ESP8266.   
+	The WiFi channel must match the ESP32.   
 	```
 	$ sudo iwconfig wlx1cbfceaae44d channel 11
 
