@@ -32,6 +32,7 @@ $ sudo iwconfig wlp5s0 channel 11
 #include <arpa/inet.h>
 #include <assert.h>
 #include <linux/filter.h>
+#include <esp_rom_crc.h>
 
 #define MAX_PACKET_LEN 1512 // For version v2.0, x = 1512(1470 + 6*7), for version v1.0, x = 257(250 + 7)
 
@@ -63,9 +64,18 @@ static struct sock_filter bpfcode[FILTER_LENGTH] = {
   { 0x6, 0, 0, 0x00000000 },	// ret #0	// return 'False'
 };
 
-void print_packet(uint8_t *data, int len)
+typedef struct {
+    uint8_t type;                         //Broadcast or unicast ESPNOW data.
+    uint8_t state;                        //Indicate that if has received broadcast ESPNOW data or not.
+    uint16_t seq_num;                     //Sequence number of ESPNOW data.
+    uint16_t crc;                         //CRC16 value of ESPNOW data.
+    uint32_t magic;                       //Magic number which is used to determine which device to send unicast ESPNOW data.
+    uint8_t payload[0];                   //Real payload of ESPNOW data.
+} __attribute__((packed)) example_espnow_data_t;
+
+void print_packet(char * title, uint8_t *data, int len)
 {
-	printf("----------------------------new packet-----------------------------------\n");
+	printf("\n------------------- %s len:%d -------------------\n", title, len);
 	int i;
 	for (i = 0; i < len; i++) {
 		if (i % 16 == 0) printf("\n");
@@ -76,7 +86,8 @@ void print_packet(uint8_t *data, int len)
 	int offset = 24;
 	printf("MAC Header:");
 	for (i = 0; i < 24; i++) {
-		printf(" 0x%.02x", data[offset]);
+		if (i % 16 == 0) printf("\n");
+		printf("0x%02x, ", data[offset]);
 		offset++;
 	}
 	printf("\n");
@@ -84,10 +95,13 @@ void print_packet(uint8_t *data, int len)
 	printf("Category Code: 0x%.02x\n", data[offset]);
 	printf("Organization Identifier: 0x%.02x-0x%.02x-0x%.02x\n", data[offset+1], data[offset+2], data[offset+3]);
 	printf("Random Values: 0x%.02x-0x%.02x-0x%.02x-0x%.02x\n", data[offset+4], data[offset+5], data[offset+6], data[offset+7]);
-	printf("\n");
 
 	offset = 56;
+	int totalBodyLength = 0;
+	uint8_t *totalBody = malloc(1);
+
 	while(1) {
+		printf("\n");
 		printf("Element ID: 0x%.02x\n", data[offset]);
 		printf("Length: 0x%.02x\n", data[offset+1]);
 		printf("Organization Identifier: 0x%.02x-0x%.02x-0x%.02x\n", data[offset+2], data[offset+3], data[offset+4]);
@@ -103,19 +117,45 @@ void print_packet(uint8_t *data, int len)
 			printf("0x%02x, ", data[i+offset+7]);
 		}
 		printf("\n\n");
+
+		int _totalBodyLength = totalBodyLength;
+		totalBodyLength = totalBodyLength + bodyLength;
+		int *_totalBody = realloc(totalBody, totalBodyLength);
+		if (_totalBody == NULL) {
+			printf("realloc fail\n");
+			free(totalBody);
+			return;
+		} 
+		*totalBody = *_totalBody;
+		memcpy(&totalBody[_totalBodyLength], &data[offset+7], bodyLength);
+
 		if (moreData == 0x00) break;
 		offset = offset + 257;
 	}
 
+	offset = 56;
+	example_espnow_data_t example_espnow_data;
+	memcpy(&example_espnow_data, &data[offset+7], sizeof(example_espnow_data_t));
+	printf("example_espnow_data.type: %d\n", example_espnow_data.type);
+	printf("example_espnow_data.state: %d\n", example_espnow_data.state);
+	printf("example_espnow_data.seq_num: %d\n", example_espnow_data.seq_num);
+	printf("example_espnow_data.crc: 0x%04x\n", example_espnow_data.crc);
+	printf("example_espnow_data.magic: 0x%08x\n", example_espnow_data.magic);
+
+	example_espnow_data.crc = 0;
+	memcpy(totalBody, &example_espnow_data, sizeof(example_espnow_data_t));
+	uint16_t crc = esp_rom_crc16_le(UINT16_MAX, totalBody, totalBodyLength);
+	printf("calculated crc: 0x%04x\n", crc);
+	free(totalBody);
 }
 
 int create_raw_socket(char *dev, struct sock_fprog *bpf)
 {
-	struct sockaddr_ll sll;
+	struct sockaddr_ll s_dest_addr;
 	struct ifreq ifr;
 	int fd, ifi, rb, attach_filter;
 
-	bzero(&sll, sizeof(sll));
+	bzero(&s_dest_addr, sizeof(s_dest_addr));
 	bzero(&ifr, sizeof(ifr));
 
 	fd = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
@@ -125,12 +165,12 @@ int create_raw_socket(char *dev, struct sock_fprog *bpf)
 	ifi = ioctl(fd, SIOCGIFINDEX, &ifr);
 	assert(ifi != -1);
 
-	sll.sll_protocol = htons(ETH_P_ALL);
-	sll.sll_family = PF_PACKET;
-	sll.sll_ifindex = ifr.ifr_ifindex;
-	sll.sll_pkttype = PACKET_OTHERHOST;
+	s_dest_addr.sll_protocol = htons(ETH_P_ALL);
+	s_dest_addr.sll_family = PF_PACKET;
+	s_dest_addr.sll_ifindex = ifr.ifr_ifindex;
+	s_dest_addr.sll_pkttype = PACKET_OTHERHOST;
 
-	rb = bind(fd, (struct sockaddr *)&sll, sizeof(sll));
+	rb = bind(fd, (struct sockaddr *)&s_dest_addr, sizeof(s_dest_addr));
 	assert(rb != -1);
 
 	attach_filter = setsockopt(fd, SOL_SOCKET, SO_ATTACH_FILTER, bpf, sizeof(*bpf));
@@ -143,7 +183,7 @@ int main(int argc, char **argv)
 {
 	assert(argc == 2);
 
-	uint8_t buff[MAX_PACKET_LEN] = {0};
+	uint8_t recv_data[MAX_PACKET_LEN] = {0};
 	int sock_fd;
 	char *dev = argv[1];
 	struct sock_fprog bpf = {FILTER_LENGTH, bpfcode};
@@ -158,17 +198,13 @@ int main(int argc, char **argv)
 
 	while (1)
 	{
-		int len = recvfrom(sock_fd, buff, MAX_PACKET_LEN, MSG_TRUNC, NULL, 0);
+		int recv_len = recvfrom(sock_fd, recv_data, MAX_PACKET_LEN, MSG_TRUNC, NULL, 0);
 
-		if (len < 0)
-		{
+		if (recv_len < 0) {
 			perror("Socket receive failed or error");
 			break;
-		}
-		else
-		{
-			printf("len:%d\n", len);
-			print_packet(buff, len);
+		} else {
+			print_packet("new packet", recv_data, recv_len);
 		}
 	}
 	close(sock_fd);
