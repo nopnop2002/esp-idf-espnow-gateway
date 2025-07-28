@@ -85,7 +85,7 @@ $ git clone https://github.com/nopnop2002/esp-idf-espnow-gateway
 $ cd esp-idf-espnow-gateway/Linux/Receiver
 $ make
 mkdir -p bin
-gcc main.c -Wall -o bin/receiver
+gcc main.c esp_rom_crc.c -I. -Wall -o bin/receiver
 $ sudo ./bin/receiver wlx1cbfceaae44d
 
 Waiting to receive packets ........
