@@ -68,9 +68,9 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
 	}
 }
 
-// ESP32 has ESP_IF_WIFI_STA and ESP_IF_WIFI_AP.
-// ESPNOW uses ESP_IF_WIFI_AP.
-#define ESPNOW_WIFI_IF ESP_IF_WIFI_AP
+// ESP32 has WIFI_IF_STA and WIFI_IF_AP.
+// ESPNOW uses WIFI_IF_AP.
+#define ESPNOW_WIFI_IF WIFI_IF_AP
 
 /* WiFi should start before using ESPNOW */
 static void initialise_wifi(void)
@@ -114,7 +114,7 @@ static esp_err_t wifi_start(void)
 		},
 	};
 
-	ESP_ERROR_CHECK( esp_wifi_set_config(ESP_IF_WIFI_STA, &sta_config) );
+	ESP_ERROR_CHECK( esp_wifi_set_config(WIFI_IF_STA, &sta_config) );
 
 	ESP_ERROR_CHECK( esp_wifi_start() );
 
@@ -133,7 +133,7 @@ static esp_err_t wifi_start(void)
 		ESP_LOGI(TAG, "connected to ap SSID:%s", CONFIG_STA_WIFI_SSID);
 #if 0
 		uint8_t sta_mac[6] = {0};
-		esp_wifi_get_mac(ESP_IF_WIFI_STA, sta_mac);
+		esp_wifi_get_mac(WIFI_IF_STA, sta_mac);
 		ESP_LOGI(pcTaskGetName(0), "sta_mac:" MACSTR ,MAC2STR(sta_mac));
 #endif
 		uint8_t ap_mac[6] = {0};
