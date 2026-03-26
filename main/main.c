@@ -137,7 +137,7 @@ static esp_err_t wifi_start(void)
 		ESP_LOGI(pcTaskGetName(0), "sta_mac:" MACSTR ,MAC2STR(sta_mac));
 #endif
 		uint8_t ap_mac[6] = {0};
-		esp_wifi_get_mac(ESP_IF_WIFI_AP, ap_mac);
+		esp_wifi_get_mac(WIFI_IF_AP, ap_mac);
 		ESP_LOGW(pcTaskGetName(0), "ap_mac:" MACSTR ,MAC2STR(ap_mac));
 
 		uint8_t primary_channel;
@@ -173,7 +173,7 @@ static void example_espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_
 	evt.id = EXAMPLE_ESPNOW_SEND_CB;
 	memcpy(send_cb->mac_addr, mac_addr, ESP_NOW_ETH_ALEN);
 	send_cb->status = status;
-	if (xQueueSend(s_espnow_queue, &evt, portMAX_DELAY) != pdTRUE) {
+	if (xQueueSend(s_espnow_queue, &evt, portMAX_DELAY) != pdPASS) {
 		ESP_LOGW(TAG, "Send send queue fail");
 	}
 }
@@ -207,7 +207,7 @@ static void example_espnow_recv_cb(const uint8_t *mac_addr, const uint8_t *data,
 	}
 	memcpy(recv_cb->data, data, len);
 	recv_cb->data_len = len;
-	if (xQueueSend(s_espnow_queue, &evt, portMAX_DELAY) != pdTRUE) {
+	if (xQueueSend(s_espnow_queue, &evt, portMAX_DELAY) != pdPASS) {
 		ESP_LOGW(TAG, "Send receive queue fail");
 		free(recv_cb->data);
 	}
@@ -222,7 +222,7 @@ static void espnow_task(void *pvParameter)
 	example_espnow_data_t recv_data;
 
 	MQTT_t mqttBuf;
-	while (xQueueReceive(s_espnow_queue, &evt, portMAX_DELAY) == pdTRUE) {
+	while (xQueueReceive(s_espnow_queue, &evt, portMAX_DELAY) == pdPASS) {
 		if (evt.id == EXAMPLE_ESPNOW_SEND_CB) {
 
 		} else if (evt.id == EXAMPLE_ESPNOW_RECV_CB) {
