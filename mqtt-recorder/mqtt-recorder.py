@@ -5,7 +5,7 @@ import random
 import argparse
 import datetime
 
-def on_connect(client, userdata, flags, respons_code):
+def on_connect(client, userdata, flags, respons_code, properties):
 	print('connect status:{}'.format(respons_code))
 	client.subscribe(args.topic)
 
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 	print("paho.mqtt.__version__={}".format(paho.mqtt.__version__))
 	client_id = f'subscribe-{random.randint(0, 100)}'
 	#client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)
-	client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id)
+	client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id)
 	client.on_connect = on_connect
 	client.on_message = on_message
 	client.connect(args.host, port=args.port, keepalive=60)
